@@ -24,11 +24,11 @@ set (LIBS ${LIBS} zookeeper_mt zookeeper_st)
 set (LIBS ${LIBS} boost_context boost_filesystem boost_program_options boost_system boost_iostreams boost_date_time)
 set (LIBS ${LIBS} tcmalloc event event_pthreads hdfs z)
 
-if (${USE_MPI})
+if (NOT ${NO_MPI})
     set (LIBS ${LIBS} mpi mpi++)
 endif ()
 
-if (${USE_JVM})
+if (NOT ${NO_JVM})
     set (LIBS ${LIBS} jvm)
 endif ()
 
