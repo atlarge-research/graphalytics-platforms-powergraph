@@ -15,10 +15,15 @@
  */
 package nl.tudelft.graphalytics.powergraph.algorithms.pr;
 
+import java.io.File;
+
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
+import nl.tudelft.graphalytics.powergraph.Utils;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.pr.PageRankOutput;
-import nl.tudelft.graphalytics.validation.pr.PageRankValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionOutput;
+import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankOutput;
+import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankValidationTest;
 
 /**
  * Validation tests for the PageRank implementation in PowerGraph.
@@ -41,7 +46,14 @@ public class PageRankJobTest extends PageRankValidationTest {
 	
 	private PageRankOutput execute(GraphStructure graph, PageRankParameters parameters, boolean directed)
 			throws Exception {
-		return null;
+		File inputFile = Utils.writeGraphToFile(graph);
+		File outputFile = File.createTempFile("output.", ".txt");
+		
+		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		job.setOutputFile(outputFile);
+		job.run();
+		
+		return new PageRankOutput(Utils.readResults(outputFile, Double.class));
 	}
 
 }

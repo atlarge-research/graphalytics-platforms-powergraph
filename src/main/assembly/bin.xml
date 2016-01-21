@@ -31,7 +31,11 @@
 			<source>${project.basedir}/README.md</source>
 			<outputDirectory>.</outputDirectory>
 			<destName>README-graphalytics-reference.md</destName>
-		</file>
+        </file>
+        <file>
+            <source>${project.build.directory}/c/main</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
 	</files>
 
 	<dependencySets>

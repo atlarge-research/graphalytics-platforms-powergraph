@@ -15,10 +15,15 @@
  */
 package nl.tudelft.graphalytics.powergraph.algorithms.bfs;
 
+import java.io.File;
+
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
+import nl.tudelft.graphalytics.powergraph.Utils;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.bfs.BreadthFirstSearchOutput;
-import nl.tudelft.graphalytics.validation.bfs.BreadthFirstSearchValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
+import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsOutput;
 
 /**
  * Validation tests for the BFS implementation in PowerGraph.
@@ -41,6 +46,13 @@ public class BreadthFirstSearchJobTest extends BreadthFirstSearchValidationTest 
 	
 	private BreadthFirstSearchOutput execute(GraphStructure graph,
 			BreadthFirstSearchParameters parameters, boolean directed) throws Exception {
-		return null;
+		File inputFile = Utils.writeGraphToFile(graph);
+		File outputFile = File.createTempFile("output.", ".txt");
+		
+		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		job.setOutputFile(outputFile);
+		job.run();
+		
+		return new BreadthFirstSearchOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

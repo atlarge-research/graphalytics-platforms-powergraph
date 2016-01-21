@@ -15,9 +15,12 @@
  */
 package nl.tudelft.graphalytics.powergraph.algorithms.conn;
 
+import java.io.File;
+
+import nl.tudelft.graphalytics.powergraph.Utils;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.conn.ConnectedComponentsOutput;
-import nl.tudelft.graphalytics.validation.conn.ConnectedComponentsValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsOutput;
+import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsValidationTest;
 
 /**
  * Validation tests for the connected components implementation in PowerGraph.
@@ -37,6 +40,13 @@ public class ConnectedComponentsJobTest extends ConnectedComponentsValidationTes
 	}
 	
 	private ConnectedComponentsOutput execute(GraphStructure graph, boolean directed) throws Exception {
-		return null;
+		File inputFile = Utils.writeGraphToFile(graph);
+		File outputFile = File.createTempFile("output.", ".txt");
+		
+		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		job.setOutputFile(outputFile);
+		job.run();
+		
+		return new ConnectedComponentsOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

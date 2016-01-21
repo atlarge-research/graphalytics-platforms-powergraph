@@ -15,12 +15,33 @@
  */
 package nl.tudelft.graphalytics.powergraph;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import nl.tudelft.graphalytics.Platform;
 import nl.tudelft.graphalytics.PlatformExecutionException;
 import nl.tudelft.graphalytics.domain.Benchmark;
 import nl.tudelft.graphalytics.domain.Graph;
 import nl.tudelft.graphalytics.domain.NestedConfiguration;
 import nl.tudelft.graphalytics.domain.PlatformBenchmarkResult;
+import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
+import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionParameters;
+import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
+import nl.tudelft.graphalytics.powergraph.algorithms.bfs.BreadthFirstSearchJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.pr.PageRankJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
 
 /**
  * PowerGraph implementation of the Graphalytics benchmark.
@@ -28,21 +49,72 @@ import nl.tudelft.graphalytics.domain.PlatformBenchmarkResult;
  * @author Stijn Heldens
  */
 public class PowerGraphPlatform implements Platform {
+	private static final Logger LOG = LogManager.getLogger();
+	
+	/**
+	 * File name for the file storing configuration options
+	 */
+	public static final String POWERGRAPH_PROPERTIES_FILE = "powergraph.properties";
+	
+	public static final String POWERGRAPH_BINARY_NAME = "main";
+	
+	private boolean graphDirected;
+	private String graphPath;
+	private Configuration config;
+	
+	public PowerGraphPlatform() {
+		try {
+			config = new PropertiesConfiguration(POWERGRAPH_PROPERTIES_FILE);
+		} catch(ConfigurationException e) {
+			LOG.warn("failed to load " + POWERGRAPH_PROPERTIES_FILE, e);
+			config = new PropertiesConfiguration();
+		}
+		
+	}
 
 	@Override
 	public void uploadGraph(Graph graph) throws Exception {
-
+		graphDirected = graph.getGraphFormat().isDirected();
+		graphPath = graph.getEdgeFilePath();
 	}
 
 	@Override
 	public PlatformBenchmarkResult executeAlgorithmOnGraph(Benchmark benchmark) throws PlatformExecutionException {
-		return null;
-
+		PowerGraphJob job;
+		Object params = benchmark.getAlgorithmParameters();
+		
+		switch(benchmark.getAlgorithm()) {
+			case BFS:
+				job = new BreadthFirstSearchJob(config, graphPath, graphDirected, (BreadthFirstSearchParameters) params);
+				break;
+			case CONN:
+				job = new ConnectedComponentsJob(config, graphPath, graphDirected);
+				break;
+			case STATS:
+				job = new LocalClusteringCoefficientJob(config, graphPath, graphDirected);
+				break;
+			case CD:
+				job = new CommunityDetectionJob(config, graphPath, graphDirected, (CommunityDetectionParameters) params);
+				break;
+			case PAGERANK:
+				job = new PageRankJob(config, graphPath, graphDirected, (PageRankParameters) params);
+				break;
+			default:
+				throw new PlatformExecutionException("Unsupported algorithm");
+		}
+		
+		try {
+			job.run();
+		} catch (IOException|InterruptedException e) {
+			throw new PlatformExecutionException("failed to execute command", e);
+		}
+		
+		return new PlatformBenchmarkResult(NestedConfiguration.empty());
 	}
 
 	@Override
 	public void deleteGraph(String graphName) {
-
+		//
 	}
 
 	@Override

@@ -15,9 +15,14 @@
  */
 package nl.tudelft.graphalytics.powergraph.algorithms.stats;
 
+import java.io.File;
+
+import nl.tudelft.graphalytics.powergraph.Utils;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.stats.LocalClusteringCoefficientOutput;
-import nl.tudelft.graphalytics.validation.stats.LocalClusteringCoefficientValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankOutput;
+import nl.tudelft.graphalytics.validation.algorithms.stats.LocalClusteringCoefficientOutput;
+import nl.tudelft.graphalytics.validation.algorithms.stats.LocalClusteringCoefficientValidationTest;
 
 /**
  * Validation tests for the local clustering coefficient calculation implementation in PowerGraph.
@@ -39,7 +44,14 @@ public class LocalClusteringCoefficientJobTest extends LocalClusteringCoefficien
 	}
 	
 	private LocalClusteringCoefficientOutput execute(GraphStructure graph, boolean directed) throws Exception {
-		return null;
+		File inputFile = Utils.writeGraphToFile(graph);
+		File outputFile = File.createTempFile("output.", ".txt");
+		
+		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		job.setOutputFile(outputFile);
+		job.run();
+		
+		return new LocalClusteringCoefficientOutput(Utils.readResults(outputFile, Double.class));
 	}
 
 }

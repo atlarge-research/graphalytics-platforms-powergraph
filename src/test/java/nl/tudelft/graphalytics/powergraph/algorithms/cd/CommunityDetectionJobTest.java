@@ -15,10 +15,15 @@
  */
 package nl.tudelft.graphalytics.powergraph.algorithms.cd;
 
+import java.io.File;
+
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionParameters;
+import nl.tudelft.graphalytics.powergraph.Utils;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.cd.CommunityDetectionOutput;
-import nl.tudelft.graphalytics.validation.cd.CommunityDetectionValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
+import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionOutput;
+import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionValidationTest;
 
 /**
  * Validation tests for the community detection implementation in PowerGraph.
@@ -41,6 +46,13 @@ public class CommunityDetectionJobTest extends CommunityDetectionValidationTest 
 	
 	private CommunityDetectionOutput execute(GraphStructure graph, CommunityDetectionParameters parameters,
 			boolean directed) throws Exception {
-		return null;
+		File inputFile = Utils.writeGraphToFile(graph);
+		File outputFile = File.createTempFile("output.", ".txt");
+		
+		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		job.setOutputFile(outputFile);
+		job.run();
+		
+		return new CommunityDetectionOutput(Utils.readResults(outputFile, Long.class));
 	}
 }
