@@ -12,7 +12,15 @@ The following dependencies are required for this platform extension (in parenthe
 * GNU Make (4.0)
 * OpenMPI or MPICH2 (if using PowerGraph distributed)
 
-Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory and compile/build using the instructions given by the authors. Next, change the parameter $POWERGRAPH_HOME in src/main/c/config.mk to refer to the root directory of PowerGraph. Adjust the parameters $NO_JVM and $NO_MPI according to the configuration of PowerGraph. Finally, refer to the documation of the Graphayltics core on how to build and run this platform repository.
+Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory and compile/build using the instructions given by the authors. 
+
+Change the parameters in `src/main/c/config.mk` to the following values:
+
+* `POWERGRAPH_HOME`: root directory where PowerGraph is installed.
+* `NO_JVM`: if PowerGraph was compiled without JVM support (-no_jvm)
+* `NO_MPI`: If PowerGraph was compiled without MPI support (-no_mpi)
+
+Finally, refer to the documation of the Graphayltics core on how to build and run this platform repository.
 
 
 ## PowerGraph-implementation-specific configuration
