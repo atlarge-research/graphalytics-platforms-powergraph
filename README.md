@@ -25,6 +25,6 @@ Finally, refer to the documation of the Graphayltics core on how to build and ru
 
 ## PowerGraph-implementation-specific configuration
 
-Edit config/powergraph.properties to change the following settings:
+Edit `config/powergraph.properties` to change the following settings:
 
- - `powergraph.command`: Set the command to run when launching PowerGraph. The default value is "%s %s" where the first argument refers to the binary name and the second arguments refers to the binary arguments. For example, change the value to "mpirun -np 2 %s %s" to execute PowerGraph using MPI.
+ - `powergraph.command`: Set the command to run when launching PowerGraph. The default value is "%s %s" where the first argument refers to the binary name and the second arguments refers to the binary arguments. For example, change the value to "mpirun -np 2 %s %s" to execute PowerGraph using MPI on two nodes.
