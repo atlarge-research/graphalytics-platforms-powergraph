@@ -25,10 +25,15 @@ int main(int argc, char **argv) {
             "Source vertex ot use (Breadth-first search only)");
 
     // General options
-    string graph_dir;
-    clopts.attach_option("graph", graph_dir,
-            "Path to the graph to use");
-    clopts.add_positional("graph");
+    string vertex_file;
+    clopts.attach_option("vertices-file", vertex_file,
+            "Path to vertices file of the graph");
+    clopts.add_positional("vertices-file");
+
+    string edge_file;
+    clopts.attach_option("edges-file", edge_file,
+            "Path to edges file of the the graph");
+    clopts.add_positional("edges-file");
 
     bool directed = false;
     clopts.attach_option("directed", directed,
@@ -58,7 +63,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    if (graph_dir.empty()) {
+    if (vertex_file.empty() || edge_file.empty()) {
         dc.cerr() << "Graph not specified. Cannot continue" << endl;
         return EXIT_FAILURE;
     }
@@ -80,7 +85,8 @@ int main(int argc, char **argv) {
     }
 
     context_t ctx = {
-        .graph_path = graph_dir,
+        .vertex_file = vertex_file,
+        .edge_file = edge_file,
         .dc = dc,
         .clopts = clopts,
         .output_stream = output_stream

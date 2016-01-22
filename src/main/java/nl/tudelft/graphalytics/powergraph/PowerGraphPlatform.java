@@ -59,7 +59,8 @@ public class PowerGraphPlatform implements Platform {
 	public static final String POWERGRAPH_BINARY_NAME = "main";
 	
 	private boolean graphDirected;
-	private String graphPath;
+	private String edgeFilePath;
+	private String vertexFilePath;
 	private Configuration config;
 	
 	public PowerGraphPlatform() {
@@ -75,7 +76,8 @@ public class PowerGraphPlatform implements Platform {
 	@Override
 	public void uploadGraph(Graph graph) throws Exception {
 		graphDirected = graph.getGraphFormat().isDirected();
-		graphPath = graph.getEdgeFilePath();
+		edgeFilePath = graph.getEdgeFilePath();
+		vertexFilePath = graph.getVertexFilePath();
 	}
 
 	@Override
@@ -85,19 +87,24 @@ public class PowerGraphPlatform implements Platform {
 		
 		switch(benchmark.getAlgorithm()) {
 			case BFS:
-				job = new BreadthFirstSearchJob(config, graphPath, graphDirected, (BreadthFirstSearchParameters) params);
+				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath, 
+						graphDirected, (BreadthFirstSearchParameters) params);
 				break;
 			case CONN:
-				job = new ConnectedComponentsJob(config, graphPath, graphDirected);
+				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath, 
+						graphDirected);
 				break;
 			case STATS:
-				job = new LocalClusteringCoefficientJob(config, graphPath, graphDirected);
+				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath, 
+						graphDirected);
 				break;
 			case CD:
-				job = new CommunityDetectionJob(config, graphPath, graphDirected, (CommunityDetectionParameters) params);
+				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath, 
+						graphDirected, (CommunityDetectionParameters) params);
 				break;
 			case PAGERANK:
-				job = new PageRankJob(config, graphPath, graphDirected, (PageRankParameters) params);
+				job = new PageRankJob(config, vertexFilePath, edgeFilePath, 
+						graphDirected, (PageRankParameters) params);
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");

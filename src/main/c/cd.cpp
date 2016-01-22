@@ -21,7 +21,7 @@ label_type most_common(const gather_type& total) {
     const map_type m = total.get();
 
     label_type best_label = 0;
-    size_t best_freq = -1;
+    size_t best_freq = 0;
 
     for (map_type::const_iterator it = m.begin(); it != m.end(); it++) {
         label_type label = it->first;
@@ -82,7 +82,7 @@ void run_cd(context_t &ctx, int max_iter) {
 
     // load graph
     graph_type graph(ctx.dc);
-    graph.load_format(ctx.graph_path, "snap");
+    load_graph(graph, ctx);
     graph.finalize();
     graph.transform_vertices(init_vertex);
 

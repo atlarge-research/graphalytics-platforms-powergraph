@@ -8,8 +8,8 @@ import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 
 public class LocalClusteringCoefficientJob extends PowerGraphJob {
 
-	public LocalClusteringCoefficientJob(Configuration config, String graphPath, boolean graphDirected) {
-		super(config, graphPath, graphDirected);
+	public LocalClusteringCoefficientJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected) {
+		super(config, verticesPath, edgesPath, graphDirected);
 	}
 
 	@Override

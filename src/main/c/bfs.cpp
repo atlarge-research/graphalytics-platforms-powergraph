@@ -1,11 +1,12 @@
 #include <graphlab.hpp>
+#include <stdint.h>
 
 #include "algorithms.hpp"
 #include "utils.hpp"
 
 using namespace std;
 
-typedef int vertex_data_type;
+typedef uint32_t vertex_data_type;
 typedef graphlab::empty edge_data_type;
 typedef graphlab::empty gather_type;
 typedef min_reducer<vertex_data_type> msg_type;
@@ -68,7 +69,7 @@ void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
 
     // load graph
     graph_type graph(ctx.dc);
-    graph.load_format(ctx.graph_path, "snap");
+    load_graph(graph, ctx);
     graph.finalize();
     graph.transform_vertices(init_vertex);
 
@@ -86,7 +87,17 @@ void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
         collect_vertex_data(graph, data);
 
         for (size_t i = 0; i < data.size(); i++) {
-            (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
+            uint64_t d = data[i].second;
+
+            // If the distance is the max value for vertex_data_type
+            // then the vertex is not connected to the source vertex.
+            // According to specs, the output should be max value for
+            // signed 64 bit integer.
+            if (d == numeric_limits<vertex_data_type>::max()) {
+                d = numeric_limits<int64_t>::max();
+            }
+
+            (*ctx.output_stream) << data[i].first << " " << d << endl;
         }
     }
 }

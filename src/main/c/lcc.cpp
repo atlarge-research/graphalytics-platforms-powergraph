@@ -79,7 +79,7 @@ class triangle_count :
             }
         }
 
-        pair<size_t, size_t> count_triangles(const vertex_type& a, const vertex_type& b) const {
+        pair<size_t, size_t> count_triangles(const vertex_type& a, const vertex_type& b, const bool inverted=false) const {
             typedef neighbors_type::const_iterator neighbors_iterator_type;
 
             const vertex_id_type a_id = a.id();
@@ -90,12 +90,12 @@ class triangle_count :
 
             const bool directed = global_directed;
 
-            if (a_adj.at(b_id) > 1 && a.id() < b.id()) {
+            if (a_adj.at(b_id) > 1 && a.id() < b.id() && !inverted) {
                 return make_pair(0, 0);
             }
 
             if (a_adj.size() > b_adj.size()) {
-                return reverse(count_triangles(b, a));
+                return reverse(count_triangles(b, a, true));
             }
 
             size_t a_count = 0;
@@ -146,7 +146,7 @@ void run_lcc(context_t& ctx, bool directed) {
 
     // load graph
     graph_type graph(ctx.dc);
-    graph.load_format(ctx.graph_path, "snap");
+    load_graph(graph, ctx);
     graph.finalize();
 
     // start engine

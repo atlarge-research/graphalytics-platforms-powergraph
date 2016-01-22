@@ -55,7 +55,13 @@ class pagerank :
 
 template <typename engine_type>
 vertex_data_type get_vertex_data(typename engine_type::icontext_type& context, const graph_type::vertex_type& vertex) {
-    return vertex.num_out_edges() == 0 ? vertex.data() : 0.0;
+    int out_degree = vertex.num_out_edges() + (global_directed ? 0 : vertex.num_in_edges());
+
+    if (out_degree == 0) {
+        return vertex.data();
+    } else {
+        return 0.0;
+    }
 }
 
 template <typename engine_type>
@@ -73,25 +79,20 @@ void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) 
     ctx.clopts.engine_args.set_option("max_iterations", max_iter);
 
     graph_type graph(ctx.dc);
-    graph.load_format(ctx.graph_path, "snap");
+    load_graph(graph, ctx);
     graph.finalize();
 
     graph.transform_vertices(boost::bind(init_vertex, _1, graph.num_vertices()));
 
     engine_type engine(ctx.dc, graph, "synchronous", ctx.clopts);
 
-    // For directed graphs we need to collect the sum of vertices which are dangling (i.e., no outgoing edges)
-    // after every iteration. For undirected graphs, dangling vertices do not exist so the sum is always zero.
-    if (directed) {
-        engine.add_vertex_aggregator<vertex_data_type>("residual",
-                                                       &get_vertex_data<engine_type>,
-                                                       &set_total_residual<engine_type>);
+    // After each iteration, we need to collect the sum of vertices which are dangling (i.e., no outgoing edges)
+    engine.add_vertex_aggregator<vertex_data_type>("residual",
+                                                   &get_vertex_data<engine_type>,
+                                                   &set_total_residual<engine_type>);
 
-        engine.aggregate_now("residual");
-        engine.aggregate_periodic("residual", 0);
-    } else {
-        global_dangling_total = 0;
-    }
+    engine.aggregate_now("residual");
+    engine.aggregate_periodic("residual", 0);
 
     engine.signal_all();
     engine.start();

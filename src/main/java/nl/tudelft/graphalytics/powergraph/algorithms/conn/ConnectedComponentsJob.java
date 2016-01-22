@@ -8,8 +8,8 @@ import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 
 public class ConnectedComponentsJob extends PowerGraphJob {
 
-	public ConnectedComponentsJob(Configuration config, String graphPath, boolean graphDirected) {
-		super(config, graphPath, graphDirected);
+	public ConnectedComponentsJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected) {
+		super(config, verticesPath, edgesPath, graphDirected);
 	}
 
 	@Override

@@ -44,10 +44,15 @@ public class LocalClusteringCoefficientJobTest extends LocalClusteringCoefficien
 	}
 	
 	private LocalClusteringCoefficientOutput execute(GraphStructure graph, boolean directed) throws Exception {
-		File inputFile = Utils.writeGraphToFile(graph);
+		File edgesFile = File.createTempFile("edges.", ".txt");
+		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
+
+		Utils.writeEdgeToFile(graph, directed, edgesFile);
+		Utils.writeVerticesToFile(graph, verticesFile);
 		
-		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		LocalClusteringCoefficientJob job = new LocalClusteringCoefficientJob(
+				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed);
 		job.setOutputFile(outputFile);
 		job.run();
 		

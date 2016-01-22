@@ -137,4 +137,42 @@ void collect_vertex_data(G &graph, std::vector<std::pair<typename G::vertex_id_t
     // TODO ADD SUPPORT FOR MPI
 }
 
+template <typename G>
+bool parse_vertex_line(G &graph, const std::string &file, const std::string &line) {
+    if (line.empty() || line[0] == '#') {
+        return true;
+    }
+
+    char *dst;
+    size_t id = strtoul(line.c_str(), &dst, 10);
+    if (dst == line.c_str()) return false;
+
+    graph.add_vertex(id);
+    return true;
+}
+
+template <typename G>
+bool parse_edge_line(G &graph, const std::string &file, const std::string &line) {
+    if (line.empty() || line[0] == '#') {
+        return true;
+    }
+
+    char *dst;
+    size_t source = strtoul(line.c_str(), &dst, 10);
+    if (dst == line.c_str()) return false;
+
+    char *end;
+    size_t target = strtoul(dst, &end, 10);
+    if (dst == end) return false;
+
+    if (source != target) graph.add_edge(source, target);
+    return true;
+}
+
+template <typename G>
+void load_graph(G &graph, context_t &ctx) {
+    graph.load(ctx.vertex_file, parse_vertex_line<G>);
+    graph.load(ctx.edge_file, parse_edge_line<G>);
+}
+
 #endif

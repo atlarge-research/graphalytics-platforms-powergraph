@@ -10,14 +10,16 @@ import org.apache.commons.configuration.Configuration;
 
 abstract public class PowerGraphJob {
 
-	private String graphPath;
+	private String verticesPath;
+	private String edgesPath;
 	private boolean graphDirected;
 	private File outputFile;
 	private Configuration config;
 	
-	public PowerGraphJob(Configuration config, String graphPath, boolean graphDirected) {
+	public PowerGraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected) {
 		this.config = config;
-		this.graphPath = graphPath;
+		this.verticesPath = verticesPath;
+		this.edgesPath = edgesPath;
 		this.graphDirected = graphDirected;
 	}
 
@@ -29,7 +31,8 @@ abstract public class PowerGraphJob {
 	
 	public void run() throws IOException, InterruptedException {
 		List<String> args = new ArrayList<>();
-		args.add(graphPath);
+		args.add(verticesPath);
+		args.add(edgesPath);
 		args.add(graphDirected ? "1" : "0");
 		addJobArguments(args);
 		

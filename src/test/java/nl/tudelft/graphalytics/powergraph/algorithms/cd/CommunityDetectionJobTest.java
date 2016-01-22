@@ -46,10 +46,15 @@ public class CommunityDetectionJobTest extends CommunityDetectionValidationTest 
 	
 	private CommunityDetectionOutput execute(GraphStructure graph, CommunityDetectionParameters parameters,
 			boolean directed) throws Exception {
-		File inputFile = Utils.writeGraphToFile(graph);
+		File edgesFile = File.createTempFile("edges.", ".txt");
+		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
+
+		Utils.writeEdgeToFile(graph, directed, edgesFile);
+		Utils.writeVerticesToFile(graph, verticesFile);
 		
-		ConnectedComponentsJob job = new ConnectedComponentsJob(inputFile.getAbsolutePath(), directed);
+		CommunityDetectionJob job = new CommunityDetectionJob(
+				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, parameters);
 		job.setOutputFile(outputFile);
 		job.run();
 		

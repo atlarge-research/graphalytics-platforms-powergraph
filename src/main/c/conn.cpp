@@ -68,7 +68,7 @@ void run_conn(context_t &ctx) {
 
     // load graph
     graph_type graph(ctx.dc);
-    graph.load_format(ctx.graph_path, "snap");
+    load_graph(graph, ctx);
     graph.finalize();
 
     // run engine

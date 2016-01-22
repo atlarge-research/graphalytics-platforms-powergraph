@@ -3,7 +3,8 @@
 #include <string>
 
 struct context_t {
-    std::string graph_path;
+    std::string vertex_file;
+    std::string edge_file;
     graphlab::distributed_control& dc;
     graphlab::command_line_options& clopts;
     std::ostream *output_stream;
