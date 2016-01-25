@@ -98,6 +98,42 @@ class histogram {
 };
 
 template <typename T>
+class vector_reducer {
+    std::vector<T> data;
+
+    public:
+        vector_reducer() {
+            //
+        }
+
+        vector_reducer(const vector_reducer<T>& other) {
+            data = other.data;
+        }
+
+        void add(T t) {
+            data.push_back(t);
+        }
+
+        vector_reducer<T>& operator+=(const vector_reducer<T>& other) {
+            data.insert(data.end(), other.data.begin(), other.data.end());
+            return *this;
+        }
+
+        const std::vector<T>& get() const {
+            return data;
+        }
+
+        void save(graphlab::oarchive& oarc) const {
+            oarc << data;
+        }
+
+        void load(graphlab::iarchive& iarc) {
+            iarc >> data;
+        }
+};
+
+
+template <typename T>
 struct min_reducer : public graphlab::IS_POD_TYPE {
     T value;
 
@@ -121,20 +157,19 @@ std::pair<B, A> reverse(std::pair<A, B> p) {
     return std::make_pair(p.second, p.first);
 }
 
+template <typename G>
+void add_vertex_to_vector(const typename G::vertex_type& v,
+        vector_reducer<std::pair<typename G::vertex_id_type,
+                                 typename G::vertex_data_type> > result) {
+    result.add(std::make_pair(v.id(), v.data()));
+}
 
 template <typename G>
-void collect_vertex_data(G &graph, std::vector<std::pair<typename G::vertex_id_type, typename G::vertex_data_type> > &result) {
-    typedef typename G::local_vertex_type local_vertex_type;
-
-    for (size_t i = 0, n = graph.num_local_vertices(); i < n; i++) {
-        const local_vertex_type& v = graph.l_vertex(i);
-
-        if (v.owned()) {
-            result.push_back(std::make_pair(v.global_id(), v.data()));
-        }
-    }
-
-    // TODO ADD SUPPORT FOR MPI
+void collect_vertex_data(G &graph,
+        std::vector<std::pair<typename G::vertex_id_type,
+                              typename G::vertex_data_type> > &result) {
+    result = graph.template fold_vertices<vector_reducer<std::pair<typename G::vertex_id_type,
+                                                                   typename G::vertex_data_type> > >(add_vertex_to_vector<G>).get();
 }
 
 template <typename G>
