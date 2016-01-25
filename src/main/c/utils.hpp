@@ -119,6 +119,11 @@ class vector_reducer {
             return *this;
         }
 
+        vector_reducer<T>& operator=(const vector_reducer<T>& other) {
+            data = other.data;
+            return *this;
+        }
+
         const std::vector<T>& get() const {
             return data;
         }
