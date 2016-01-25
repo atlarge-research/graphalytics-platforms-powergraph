@@ -8,9 +8,12 @@ if (NOT POWERGRAPH_HOME)
     message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in: ${CONFIG_PATH}")
 endif ()
 
+
 find_package(OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
+find_package(Threads REQUIRED)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fopenmp -Wno-unused-variable -Wno-unused-parameter")
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Wextra")
@@ -22,10 +25,6 @@ include_directories (SYSTEM ${POWERGRAPH_HOME}/src)
 
 link_directories (${POWERGRAPH_HOME}/deps/local/lib)
 link_directories (${POWERGRAPH_HOME}/release/src/graphlab)
-
-set (CMAKE_C_FLAGS "-asdfasdf")
-find_package(Threads REQUIRED)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
 
 set (LIBS ${LIBS} graphlab)
 set (LIBS ${LIBS} zookeeper_mt zookeeper_st)
