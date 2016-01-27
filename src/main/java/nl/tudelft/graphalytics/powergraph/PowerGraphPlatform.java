@@ -56,7 +56,7 @@ public class PowerGraphPlatform implements Platform {
 	 */
 	public static final String POWERGRAPH_PROPERTIES_FILE = "powergraph.properties";
 	
-	public static final String POWERGRAPH_BINARY_NAME = "main";
+	public static final String POWERGRAPH_BINARY_NAME = "bin/main";
 	
 	private boolean graphDirected;
 	private String edgeFilePath;

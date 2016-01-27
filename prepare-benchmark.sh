@@ -17,3 +17,12 @@
 
 export platform="powergraph"
 
+# Build binaries
+mkdir -p bin
+(cd bin && cmake -DCMAKE_BUILD_TYPE=Release ../src/ && make all)
+
+if [ $? -ne 0 ]
+then
+    echo "compilation failed"
+    exit 1
+fi

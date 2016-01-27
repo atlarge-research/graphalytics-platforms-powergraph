@@ -25,6 +25,10 @@
 				<exclude>original*</exclude>
 			</excludes>
 		</fileSet>
+        <fileSet>
+            <directory>src/main/c</directory>
+            <outputDirectory>src</outputDirectory>
+        </fileSet>
 	</fileSets>
 	<files>
 		<file>

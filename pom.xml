@@ -172,38 +172,6 @@
 					</execution>
 				</executions>
             </plugin>
-
-			<!-- Plugin for compiling C code using cmake  -->
-            <plugin>
-                <groupId>com.googlecode.cmake-maven-project</groupId>
-                <artifactId>cmake-maven-plugin</artifactId>
-                <version>3.4.1-b1</version>
-                <executions>
-               		<execution>
-                		<id>cmake-generate</id>
-                		<goals>
-                			<goal>generate</goal>
-                		</goals>
-                		<configuration>
-                			<sourcePath>src/main/c</sourcePath>
-                			<targetPath>${project.build.directory}/c</targetPath>
-                			<generator>Unix Makefiles</generator>
-                			<options>
-                				<option>-DCMAKE_BUILD_TYPE=Release</option>
-                			</options>
-                		</configuration>
-                	</execution>
-                	<execution>
-                		<id>cmake-compile</id>
-                		<goals>
-                			<goal>compile</goal>
-                		</goals>
-                		<configuration>
-                			<projectDirectory>${project.build.directory}/c</projectDirectory>
-                		</configuration>
-                	</execution>
-                </executions>
-        	</plugin>
 		</plugins>
 	</build>
 </project>
