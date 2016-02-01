@@ -1,13 +1,13 @@
 project (PowerGraphApps CXX C)
 cmake_minimum_required (VERSION 2.6)
 
-include (config.cmake)
-
 if (NOT POWERGRAPH_HOME)
-    get_filename_component(CONFIG_PATH config.cmake ABSOLUTE)
-    message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in: ${CONFIG_PATH}")
+    set(POWERGRAPH_HOME $ENV{POWERGRAPH_HOME})
 endif ()
 
+if (NOT ${POWERGRAPH_HOME})
+    message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in the environment or using -D")
+endif ()
 
 find_package(OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
