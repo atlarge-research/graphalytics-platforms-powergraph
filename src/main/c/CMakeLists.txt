@@ -5,7 +5,7 @@ if (NOT POWERGRAPH_HOME)
     set(POWERGRAPH_HOME $ENV{POWERGRAPH_HOME})
 endif ()
 
-if (NOT ${POWERGRAPH_HOME})
+if (NOT POWERGRAPH_HOME)
     message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in the environment or using -D")
 endif ()
 
