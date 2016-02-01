@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 
-import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionParameters;
+import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 
 public class CommunityDetectionJob extends PowerGraphJob {
-	private CommunityDetectionParameters params;
+	private CommunityDetectionLPParameters params;
 	
-	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, CommunityDetectionParameters params) {
+	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, CommunityDetectionLPParameters params) {
 		super(config, verticesPath, edgesPath, graphDirected);
 		this.params = params;
 	}

@@ -35,7 +35,7 @@ import nl.tudelft.graphalytics.domain.Graph;
 import nl.tudelft.graphalytics.domain.NestedConfiguration;
 import nl.tudelft.graphalytics.domain.PlatformBenchmarkResult;
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
-import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionParameters;
+import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
 import nl.tudelft.graphalytics.powergraph.algorithms.bfs.BreadthFirstSearchJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
@@ -90,19 +90,19 @@ public class PowerGraphPlatform implements Platform {
 				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath, 
 						graphDirected, (BreadthFirstSearchParameters) params);
 				break;
-			case CONN:
+			case WCC:
 				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath, 
 						graphDirected);
 				break;
-			case STATS:
+			case LCC:
 				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath, 
 						graphDirected);
 				break;
-			case CD:
+			case CDLP:
 				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath, 
-						graphDirected, (CommunityDetectionParameters) params);
+						graphDirected, (CommunityDetectionLPParameters) params);
 				break;
-			case PAGERANK:
+			case PR:
 				job = new PageRankJob(config, vertexFilePath, edgeFilePath, 
 						graphDirected, (PageRankParameters) params);
 				break;
