@@ -21,7 +21,6 @@ import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
 import nl.tudelft.graphalytics.powergraph.Utils;
 import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionOutput;
 import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankOutput;
 import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankValidationTest;
 

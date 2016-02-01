@@ -13,33 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.tudelft.graphalytics.powergraph.algorithms.conn;
+package nl.tudelft.graphalytics.powergraph.algorithms.wcc;
 
 import java.io.File;
 
 import nl.tudelft.graphalytics.powergraph.Utils;
+import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsOutput;
-import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsOutput;
+import nl.tudelft.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsValidationTest;
 
 /**
  * Validation tests for the connected components implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class ConnectedComponentsJobTest extends ConnectedComponentsValidationTest {
+public class WeaklyConnectedComponentsJobTest extends WeaklyConnectedComponentsValidationTest {
 
 	@Override
-	public ConnectedComponentsOutput executeDirectedConnectedComponents(GraphStructure graph) throws Exception {
+	public WeaklyConnectedComponentsOutput executeDirectedConnectedComponents(GraphStructure graph) throws Exception {
 		return execute(graph, true);
 	}
 
 	@Override
-	public ConnectedComponentsOutput executeUndirectedConnectedComponents(GraphStructure graph) throws Exception {
+	public WeaklyConnectedComponentsOutput executeUndirectedConnectedComponents(GraphStructure graph) throws Exception {
 		return execute(graph, false);
 	}
 	
-	private ConnectedComponentsOutput execute(GraphStructure graph, boolean directed) throws Exception {
+	private WeaklyConnectedComponentsOutput execute(GraphStructure graph, boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
@@ -52,6 +53,6 @@ public class ConnectedComponentsJobTest extends ConnectedComponentsValidationTes
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new ConnectedComponentsOutput(Utils.readResults(outputFile, Long.class));
+		return new WeaklyConnectedComponentsOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

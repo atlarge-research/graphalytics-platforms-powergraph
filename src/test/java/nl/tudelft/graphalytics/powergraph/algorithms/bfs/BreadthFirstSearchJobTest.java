@@ -23,7 +23,6 @@ import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob
 import nl.tudelft.graphalytics.validation.GraphStructure;
 import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
 import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchValidationTest;
-import nl.tudelft.graphalytics.validation.algorithms.conn.ConnectedComponentsOutput;
 
 /**
  * Validation tests for the BFS implementation in PowerGraph.

@@ -13,38 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.tudelft.graphalytics.powergraph.algorithms.cd;
+package nl.tudelft.graphalytics.powergraph.algorithms.cdlp;
 
 import java.io.File;
 
-import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionParameters;
+import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.powergraph.Utils;
-import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
-import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionOutput;
-import nl.tudelft.graphalytics.validation.algorithms.cd.CommunityDetectionValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPOutput;
+import nl.tudelft.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPValidationTest;
 
 /**
  * Validation tests for the community detection implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class CommunityDetectionJobTest extends CommunityDetectionValidationTest {
+public class CommunityDetectionLPJobTest extends CommunityDetectionLPValidationTest {
 
 	@Override
-	public CommunityDetectionOutput executeDirectedCommunityDetection(GraphStructure graph,
-			CommunityDetectionParameters parameters) throws Exception {
+	public CommunityDetectionLPOutput executeDirectedCommunityDetection(GraphStructure graph,
+			CommunityDetectionLPParameters parameters) throws Exception {
 		return execute(graph, parameters, true);
 	}
 
 	@Override
-	public CommunityDetectionOutput executeUndirectedCommunityDetection(GraphStructure graph,
-			CommunityDetectionParameters parameters) throws Exception {
+	public CommunityDetectionLPOutput executeUndirectedCommunityDetection(GraphStructure graph,
+			CommunityDetectionLPParameters parameters) throws Exception {
 		return execute(graph, parameters, false);
 	}
 	
-	private CommunityDetectionOutput execute(GraphStructure graph, CommunityDetectionParameters parameters,
+	private CommunityDetectionLPOutput execute(GraphStructure graph, CommunityDetectionLPParameters parameters,
 			boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
@@ -58,6 +57,6 @@ public class CommunityDetectionJobTest extends CommunityDetectionValidationTest 
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new CommunityDetectionOutput(Utils.readResults(outputFile, Long.class));
+		return new CommunityDetectionLPOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

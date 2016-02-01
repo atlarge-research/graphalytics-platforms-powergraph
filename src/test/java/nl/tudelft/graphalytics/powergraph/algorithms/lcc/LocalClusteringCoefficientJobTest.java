@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.tudelft.graphalytics.powergraph.algorithms.stats;
+package nl.tudelft.graphalytics.powergraph.algorithms.lcc;
 
 import java.io.File;
 
 import nl.tudelft.graphalytics.powergraph.Utils;
 import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
 import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankOutput;
-import nl.tudelft.graphalytics.validation.algorithms.stats.LocalClusteringCoefficientOutput;
-import nl.tudelft.graphalytics.validation.algorithms.stats.LocalClusteringCoefficientValidationTest;
+import nl.tudelft.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientOutput;
+import nl.tudelft.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientValidationTest;
 
 /**
  * Validation tests for the local clustering coefficient calculation implementation in PowerGraph.
