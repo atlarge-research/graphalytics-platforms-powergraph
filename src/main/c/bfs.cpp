@@ -63,26 +63,30 @@ class breadth_first_search :
 };
 
 void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
+    timer_start();
 
     // process parameters
     global_directed = directed;
 
     // load graph
+    timer_next("load graph");
     graph_type graph(ctx.dc);
     load_graph(graph, ctx);
     graph.finalize();
     graph.transform_vertices(init_vertex);
 
     // start engine
+    timer_next("initialize engine");
     graphlab::omni_engine<breadth_first_search> engine(ctx.dc, graph, "synchronous", ctx.clopts);
     engine.signal(source, msg_type(0));
+
+    // run algorithm
+    timer_next("run algorithm");
     engine.start();
 
     // print output
-    const float runtime = engine.elapsed_seconds();
-    ctx.dc.cerr() << "finished in " << runtime << " sec" << endl;
-
     if (ctx.output_stream) {
+    	timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
         collect_vertex_data(graph, data);
 
@@ -100,4 +104,6 @@ void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
             (*ctx.output_stream) << data[i].first << " " << d << endl;
         }
     }
+
+    timer_end();
 }

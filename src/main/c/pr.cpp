@@ -72,19 +72,24 @@ void set_total_residual(typename engine_type::icontext_type& context, vertex_dat
 
 void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) {
     typedef graphlab::omni_engine<pagerank> engine_type;
+    timer_start();
 
     // process parameters
     global_directed = directed;
     global_damping_factor = damping_factor;
     ctx.clopts.engine_args.set_option("max_iterations", max_iter);
 
+    // load graph
+    timer_next("load graph");
     graph_type graph(ctx.dc);
     load_graph(graph, ctx);
     graph.finalize();
-
     graph.transform_vertices(boost::bind(init_vertex, _1, graph.num_vertices()));
 
+    // load engine
+    timer_next("initialize engine");
     engine_type engine(ctx.dc, graph, "synchronous", ctx.clopts);
+    engine.signal_all();
 
     // After each iteration, we need to collect the sum of vertices which are dangling (i.e., no outgoing edges)
     engine.add_vertex_aggregator<vertex_data_type>("residual",
@@ -94,14 +99,13 @@ void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) 
     engine.aggregate_now("residual");
     engine.aggregate_periodic("residual", 0);
 
-    engine.signal_all();
+    // run algorithm
+    timer_next("run algorithm");
     engine.start();
 
     // print output
-    const float runtime = engine.elapsed_seconds();
-    ctx.dc.cerr() << "finished in " << runtime << " sec" << endl;
-
     if (ctx.output_stream) {
+        timer_next("print output");
          vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
          collect_vertex_data(graph, data);
 
@@ -109,4 +113,6 @@ void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) 
              (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
          }
     }
+
+    timer_end();
 }

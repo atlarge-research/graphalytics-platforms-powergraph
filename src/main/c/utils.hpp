@@ -2,7 +2,12 @@
 #define UTILS_HPP
 
 #include <graphlab.hpp>
+#include <fstream>
+#include <ostream>
+#include <sys/time.h>
 #include <limits>
+#include <string>
+#include <vector>
 
 
 
@@ -213,6 +218,37 @@ template <typename G>
 void load_graph(G &graph, context_t &ctx) {
     graph.load(ctx.vertex_file, parse_vertex_line<G>);
     graph.load(ctx.edge_file, parse_edge_line<G>);
+}
+
+static double timer() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+static std::vector<std::pair<std::string, double> > timers;
+
+static void timer_start() {
+    timers.clear();
+}
+
+static void timer_next(std::string name) {
+    timers.push_back(std::make_pair(name, timer()));
+}
+
+static void timer_end() {
+    timer_next("end");
+
+    std::cerr << "Timing results:" << std::endl;
+
+    for (size_t i = 0; i < timers.size() - 1; i++) {
+        std::string &name = timers[i].first;
+        double time = timers[i + 1].second - timers[i].second;
+
+        std::cerr << " - "  << name << ": " << time << " sec" <<  std::endl;
+    }
+
+    timers.clear();
 }
 
 #endif

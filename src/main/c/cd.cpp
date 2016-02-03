@@ -76,26 +76,30 @@ class label_propagation :
 
 
 void run_cd(context_t &ctx, int max_iter) {
+    timer_start();
 
     // process parameters
     ctx.clopts.engine_args.set_option("max_iterations", max_iter);
 
     // load graph
+    timer_next("load graph");
     graph_type graph(ctx.dc);
     load_graph(graph, ctx);
     graph.finalize();
     graph.transform_vertices(init_vertex);
 
     // run engine
+    timer_next("initialize engine");
     graphlab::omni_engine<label_propagation> engine(ctx.dc, graph, "synchronous", ctx.clopts);
     engine.signal_all();
+
+    // run algorithm
+    timer_next("run algorithm");
     engine.start();
 
     // print output
-    const float runtime = engine.elapsed_seconds();
-    ctx.dc.cerr() << "finished in " << runtime << " sec" << endl;
-
     if (ctx.output_stream) {
+        timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
         collect_vertex_data(graph, data);
 
@@ -104,4 +108,5 @@ void run_cd(context_t &ctx, int max_iter) {
         }
     }
 
+    timer_end();
 }

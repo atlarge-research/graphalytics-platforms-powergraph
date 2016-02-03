@@ -140,24 +140,29 @@ class triangle_count :
 
 
 void run_lcc(context_t& ctx, bool directed) {
+    timer_start();
 
     // process parmaeters
     global_directed = directed;
 
     // load graph
+    timer_next("load graph");
     graph_type graph(ctx.dc);
     load_graph(graph, ctx);
     graph.finalize();
 
     // start engine
+    timer_next("initialize engine");
     graphlab::omni_engine<triangle_count> engine(ctx.dc, graph, "synchronous", ctx.clopts);
     engine.signal_all();
+
+    // run algorithm
+    timer_next("run algorithm");
     engine.start();
 
-    const float runtime = engine.elapsed_seconds();
-    ctx.dc.cout() << "finished in " << runtime << " sec" << endl;
-
+    // print output
     if (ctx.output_stream) {
+        timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
         collect_vertex_data(graph, data);
 
@@ -166,4 +171,5 @@ void run_lcc(context_t& ctx, bool directed) {
         }
     }
 
+    timer_end();
 }

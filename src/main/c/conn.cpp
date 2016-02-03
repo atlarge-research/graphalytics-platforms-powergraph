@@ -65,27 +65,33 @@ class weakly_connected_components :
 
 
 void run_conn(context_t &ctx) {
+    timer_start();
 
     // load graph
+    timer_next("load graph");
     graph_type graph(ctx.dc);
     load_graph(graph, ctx);
     graph.finalize();
 
     // run engine
+    timer_next("initialize engine");
     graphlab::omni_engine<weakly_connected_components> engine(ctx.dc, graph, "synchronous", ctx.clopts);
     engine.signal_all(msg_type(INVALID_LABEL));
+
+    // run algorithm
+    timer_next("run algorithm");
     engine.start();
 
     // print output
-    const float runtime = engine.elapsed_seconds();
-    ctx.dc.cerr() << "finished in " << runtime << " sec" << endl;
-
     if (ctx.output_stream) {
-         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-         collect_vertex_data(graph, data);
+        timer_next("print output");
+        vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
+        collect_vertex_data(graph, data);
 
-         for (size_t i = 0; i < data.size(); i++) {
-             (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
-         }
+        for (size_t i = 0; i < data.size(); i++) {
+            (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
+        }
     }
+
+    timer_end();
 }
