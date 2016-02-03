@@ -36,10 +36,6 @@
 			<outputDirectory>.</outputDirectory>
 			<destName>README-graphalytics-reference.md</destName>
         </file>
-        <file>
-            <source>${project.build.directory}/c/main</source>
-            <outputDirectory>.</outputDirectory>
-        </file>
 	</files>
 
 	<dependencySets>
