@@ -31,3 +31,9 @@ void run_conn(
 void run_lcc(
         context_t &ctx,
         bool directed);
+
+void run_sssp(
+        context_t &ctx,
+        bool directed,
+        graphlab::vertex_id_type source);
+

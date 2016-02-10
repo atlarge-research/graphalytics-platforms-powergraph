@@ -182,42 +182,99 @@ void collect_vertex_data(G &graph,
                                                                    typename G::vertex_data_type> > >(add_vertex_to_vector<G>).get();
 }
 
-template <typename G>
-bool parse_vertex_line(G &graph, const std::string &file, const std::string &line) {
-    if (line.empty() || line[0] == '#') {
-        return true;
-    }
-
-    char *dst;
-    size_t id = strtoul(line.c_str(), &dst, 10);
-    if (dst == line.c_str()) return false;
-
-    graph.add_vertex(id);
+template <typename D>
+bool default_parser(const std::string &p, D &data) {
     return true;
 }
 
-template <typename G>
-bool parse_edge_line(G &graph, const std::string &file, const std::string &line) {
-    if (line.empty() || line[0] == '#') {
+static bool safe_strtoull(const char **str, size_t &val) {
+    const char *before = *str;
+    char *after;
+
+    val = strtoull(before, &after, 10);
+    *str = after;
+
+    return before < after;
+}
+
+template <typename G, typename F>
+bool parse_vertex_line(G &graph, const std::string &file, const std::string &line, const F &parser) {
+    typedef typename G::vertex_data_type vertex_data_type;
+
+    const char *str = line.c_str();
+    size_t id;
+    vertex_data_type data;
+
+    while (isspace(*str)) str++;
+
+    if (*str == '\0' || *str == '#') {
         return true;
     }
 
-    char *dst;
-    size_t source = strtoul(line.c_str(), &dst, 10);
-    if (dst == line.c_str()) return false;
+    if (!safe_strtoull(&str, id)) {
+        return false;
+    }
 
-    char *end;
-    size_t target = strtoul(dst, &end, 10);
-    if (dst == end) return false;
+    while (isspace(*str)) str++;
 
-    if (source != target) graph.add_edge(source, target);
+    if (!parser(std::string(str), data)) {
+        return false;
+    }
+
+    graph.add_vertex(id, data);
     return true;
+}
+
+template <typename G, typename F>
+bool parse_edge_line(G &graph, const std::string &file, const std::string &line, const F &parser) {
+    typedef typename G::edge_data_type edge_data_type;
+
+    const char *str = line.c_str();
+    size_t source, target;
+    edge_data_type data;
+
+    while (isspace(*str)) str++;
+
+    if (*str == '\0' || *str == '#') {
+        return true;
+    }
+
+    if (!safe_strtoull(&str, source)) {
+        return false;
+    }
+
+    while (isspace(*str)) str++;
+
+    if (!safe_strtoull(&str, target)) {
+        return false;
+    }
+
+    while (isspace(*str)) str++;
+
+    if (!parser(std::string(str), data)) {
+        return false;
+    }
+
+    if (source != target) {
+        return true;
+    }
+
+    graph.add_edge(source, target, data);
+
+    return true;
+}
+
+template <typename G, typename FV, typename FE>
+void load_graph_properties(G &graph, context_t &ctx, const FV &vertex_parser, const FE &edge_parser) {
+    graph.load(ctx.vertex_file, boost::bind(parse_vertex_line<G, FV>, _1, _2, _3, boost::ref(vertex_parser)));
+    graph.load(ctx.edge_file, boost::bind(parse_edge_line<G, FE>, _1, _2, _3, boost::ref(edge_parser)));
 }
 
 template <typename G>
 void load_graph(G &graph, context_t &ctx) {
-    graph.load(ctx.vertex_file, parse_vertex_line<G>);
-    graph.load(ctx.edge_file, parse_edge_line<G>);
+    load_graph_properties(graph, ctx,
+            default_parser<typename G::vertex_data_type>,
+            default_parser<typename G::edge_data_type>);
 }
 
 static double timer() {

@@ -16,11 +16,6 @@
 package nl.tudelft.graphalytics.powergraph;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.ProcessBuilder.Redirect;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -37,10 +32,12 @@ import nl.tudelft.graphalytics.domain.PlatformBenchmarkResult;
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
+import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathParameters;
 import nl.tudelft.graphalytics.powergraph.algorithms.bfs.BreadthFirstSearchJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.pr.PageRankJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
 
 /**
@@ -50,19 +47,19 @@ import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoeffi
  */
 public class PowerGraphPlatform implements Platform {
 	private static final Logger LOG = LogManager.getLogger();
-	
+
 	/**
 	 * File name for the file storing configuration options
 	 */
 	public static final String POWERGRAPH_PROPERTIES_FILE = "powergraph.properties";
-	
+
 	public static final String POWERGRAPH_BINARY_NAME = "bin/main";
-	
+
 	private boolean graphDirected;
 	private String edgeFilePath;
 	private String vertexFilePath;
 	private Configuration config;
-	
+
 	public PowerGraphPlatform() {
 		try {
 			config = new PropertiesConfiguration(POWERGRAPH_PROPERTIES_FILE);
@@ -70,7 +67,7 @@ public class PowerGraphPlatform implements Platform {
 			LOG.warn("failed to load " + POWERGRAPH_PROPERTIES_FILE, e);
 			config = new PropertiesConfiguration();
 		}
-		
+
 	}
 
 	@Override
@@ -84,38 +81,42 @@ public class PowerGraphPlatform implements Platform {
 	public PlatformBenchmarkResult executeAlgorithmOnGraph(Benchmark benchmark) throws PlatformExecutionException {
 		PowerGraphJob job;
 		Object params = benchmark.getAlgorithmParameters();
-		
+
 		switch(benchmark.getAlgorithm()) {
 			case BFS:
-				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath, 
+				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath,
 						graphDirected, (BreadthFirstSearchParameters) params);
 				break;
 			case WCC:
-				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath, 
+				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath,
 						graphDirected);
 				break;
 			case LCC:
-				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath, 
+				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath,
 						graphDirected);
 				break;
 			case CDLP:
-				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath, 
+				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath,
 						graphDirected, (CommunityDetectionLPParameters) params);
 				break;
 			case PR:
-				job = new PageRankJob(config, vertexFilePath, edgeFilePath, 
+				job = new PageRankJob(config, vertexFilePath, edgeFilePath,
 						graphDirected, (PageRankParameters) params);
+				break;
+			case SSSP:
+				job = new SingleSourceShortestPathJob(config, vertexFilePath, edgeFilePath,
+						graphDirected, (SingleSourceShortestPathParameters) params);
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");
 		}
-		
+
 		try {
 			job.run();
 		} catch (IOException|InterruptedException e) {
 			throw new PlatformExecutionException("failed to execute command", e);
 		}
-		
+
 		return new PlatformBenchmarkResult(NestedConfiguration.empty());
 	}
 

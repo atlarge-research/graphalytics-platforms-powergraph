@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
             "Damping factor to use (PageRank only)");
 
     // BFS specific options
-    graphlab::vertex_id_type bfs_source_vertex = 0;
-    clopts.attach_option("source-vertex", bfs_source_vertex,
-            "Source vertex ot use (Breadth-first search only)");
+    graphlab::vertex_id_type traverse_source_vertex = 0;
+    clopts.attach_option("source-vertex", traverse_source_vertex,
+            "Source vertex ot use (BFS and SSSP only)");
 
     // General options
     string vertex_file;
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
     };
 
     if (algorithm == "bfs") {
-        run_bfs(ctx, directed, bfs_source_vertex);
+        run_bfs(ctx, directed, traverse_source_vertex);
     } else if (algorithm == "conn") {
         run_conn(ctx);
     } else if (algorithm == "pr") {
@@ -102,6 +102,8 @@ int main(int argc, char **argv) {
         run_cd(ctx, max_iter);
     } else if (algorithm == "lcc") {
         run_lcc(ctx, directed);
+    } else if (algorithm == "sssp") {
+        run_sssp(ctx, directed, traverse_source_vertex);
     } else {
         dc.cerr() << "Unknown algorithm specified: " << algorithm << endl;
         return EXIT_FAILURE;

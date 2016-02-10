@@ -9,6 +9,15 @@ if (NOT POWERGRAPH_HOME)
     message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in the environment or using -D")
 endif ()
 
+if (NOT NO_MPI)
+    set(NO_MPI $ENV{NO_MPI})
+endif ()
+
+if (NOT NO_JVM)
+    set(NO_JVM $ENV{NO_JVM})
+endif ()
+
+
 find_package(OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
@@ -16,8 +25,8 @@ find_package(Threads REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fopenmp -Wno-unused-variable -Wno-unused-parameter")
-set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Wextra")
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Wextra -g3")
+set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include_directories (SYSTEM ${POWERGRAPH_HOME}/deps/local/include)
@@ -44,5 +53,5 @@ if (NOT ${NO_JVM})
     set (LIBS "${LIBS} jvm hdfs")
 endif ()
 
-add_executable (main main.cpp bfs.cpp cd.cpp conn.cpp pr.cpp lcc.cpp)
+add_executable (main main.cpp bfs.cpp cd.cpp conn.cpp pr.cpp lcc.cpp sssp.cpp)
 target_link_libraries (main ${LIBS})
