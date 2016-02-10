@@ -9,6 +9,14 @@ if (NOT POWERGRAPH_HOME)
     message(FATAL_ERROR "Before running cmake, please specify $POWERGRAPH_HOME in the environment or using -D")
 endif ()
 
+if (NOT NO_MPI)
+    set(NO_MPI $ENV{NO_MPI})
+endif ()
+
+if (NOT NO_JVM)
+    set(NO_JVM $ENV{NO_JVM})
+endif ()
+
 find_package(OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
@@ -31,16 +39,18 @@ set (LIBS ${LIBS} zookeeper_mt zookeeper_st)
 set (LIBS ${LIBS} boost_context boost_filesystem boost_program_options boost_system boost_iostreams boost_date_time)
 set (LIBS ${LIBS} tcmalloc event event_pthreads z)
 
-if (NOT ${NO_MPI})
+if (NOT NO_MPI)
     find_package(MPI REQUIRED)
 
     include_directories(${MPI_CXX_INCLUDE_PATH})
     set (LIBS ${LIBS} ${MPI_CXX_LIBRARIES})
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_LINK_FLAGS}")
+
+    add_definitions (-DHAS_MPI)
 endif ()
 
-if (NOT ${NO_JVM})
+if (NOT NO_JVM)
     set (LIBS "${LIBS} jvm hdfs")
 endif ()
 
