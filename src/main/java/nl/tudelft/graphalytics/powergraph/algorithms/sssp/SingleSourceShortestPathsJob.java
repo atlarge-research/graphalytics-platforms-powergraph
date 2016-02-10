@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 
-import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathParameters;
+import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathsParameters;
 import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 
-public class SingleSourceShortestPathJob extends PowerGraphJob {
+public class SingleSourceShortestPathsJob extends PowerGraphJob {
 
-	SingleSourceShortestPathParameters params;
+	SingleSourceShortestPathsParameters params;
 
-	public SingleSourceShortestPathJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, SingleSourceShortestPathParameters params) {
+	public SingleSourceShortestPathsJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, SingleSourceShortestPathsParameters params) {
 		super(config, verticesPath, edgesPath, graphDirected);
 		this.params = params;
 	}

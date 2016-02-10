@@ -32,12 +32,12 @@ import nl.tudelft.graphalytics.domain.PlatformBenchmarkResult;
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
-import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathParameters;
+import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathsParameters;
 import nl.tudelft.graphalytics.powergraph.algorithms.bfs.BreadthFirstSearchJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.pr.PageRankJob;
-import nl.tudelft.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathsJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
 
 /**
@@ -104,8 +104,8 @@ public class PowerGraphPlatform implements Platform {
 						graphDirected, (PageRankParameters) params);
 				break;
 			case SSSP:
-				job = new SingleSourceShortestPathJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (SingleSourceShortestPathParameters) params);
+				job = new SingleSourceShortestPathsJob(config, vertexFilePath, edgeFilePath,
+						graphDirected, (SingleSourceShortestPathsParameters) params);
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");
