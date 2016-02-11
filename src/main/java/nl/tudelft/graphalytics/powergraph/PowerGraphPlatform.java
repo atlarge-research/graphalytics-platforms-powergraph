@@ -15,6 +15,7 @@
  */
 package nl.tudelft.graphalytics.powergraph;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.configuration.Configuration;
@@ -109,6 +110,10 @@ public class PowerGraphPlatform implements Platform {
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");
+		}
+
+		if (benchmark.isOutputRequired()) {
+			job.setOutputFile(new File(benchmark.getOutputPath()));
 		}
 
 		try {

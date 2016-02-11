@@ -4,6 +4,9 @@
 #include "algorithms.hpp"
 #include "utils.hpp"
 
+namespace graphalytics {
+namespace bfs {
+
 using namespace std;
 
 typedef uint32_t vertex_data_type;
@@ -62,8 +65,9 @@ class breadth_first_search :
         }
 };
 
-void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
-    timer_start();
+void run(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // process parameters
     global_directed = directed;
@@ -88,7 +92,7 @@ void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
     if (ctx.output_stream) {
     	timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-        collect_vertex_data(graph, data);
+        collect_vertex_data(graph, data, is_master);
 
         for (size_t i = 0; i < data.size(); i++) {
             uint64_t d = data[i].second;
@@ -106,4 +110,7 @@ void run_bfs(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
     }
 
     timer_end();
+}
+
+}
 }

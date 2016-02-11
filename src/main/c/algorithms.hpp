@@ -1,3 +1,6 @@
+#ifndef ALGORITHMS_H
+#define ALGORITHMS_H
+
 #include <graphlab.hpp>
 #include <ostream>
 #include <string>
@@ -10,30 +13,46 @@ struct context_t {
     std::ostream *output_stream;
 };
 
-void run_bfs(
-        context_t &ctx,
-        bool directed,
-        graphlab::vertex_id_type source);
+namespace graphalytics {
 
-void run_pr(
-        context_t &ctx,
-        bool directed,
-        double damping_factor,
-        int max_iter);
+    namespace bfs {
+        void run(
+                context_t &ctx,
+                bool directed,
+                graphlab::vertex_id_type source);
+    }
 
-void run_cd(
-        context_t &ctx,
-        int max_iter);
+    namespace pr {
+        void run(
+                context_t &ctx,
+                bool directed,
+                double damping_factor,
+                int max_iter);
+    }
 
-void run_conn(
-        context_t &ctx);
+    namespace cd {
+        void run(
+                context_t &ctx,
+                int max_iter);
+    }
 
-void run_lcc(
-        context_t &ctx,
-        bool directed);
+    namespace conn {
+        void run(
+                context_t &ctx);
+    }
 
-void run_sssp(
-        context_t &ctx,
-        bool directed,
-        graphlab::vertex_id_type source);
+    namespace lcc {
+        void run(
+                context_t &ctx,
+                bool directed);
+    }
 
+    namespace sssp {
+        void run(
+                context_t &ctx,
+                bool directed,
+                graphlab::vertex_id_type source);
+    }
+}
+
+#endif

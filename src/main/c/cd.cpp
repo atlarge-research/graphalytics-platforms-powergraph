@@ -4,6 +4,10 @@
 #include "algorithms.hpp"
 #include "utils.hpp"
 
+
+namespace graphalytics {
+namespace cd {
+
 using namespace std;
 
 typedef int label_type;
@@ -75,8 +79,9 @@ class label_propagation :
 
 
 
-void run_cd(context_t &ctx, int max_iter) {
-    timer_start();
+void run(context_t &ctx, int max_iter) {
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // process parameters
     ctx.clopts.engine_args.set_option("max_iterations", max_iter);
@@ -101,7 +106,7 @@ void run_cd(context_t &ctx, int max_iter) {
     if (ctx.output_stream) {
         timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-        collect_vertex_data(graph, data);
+        collect_vertex_data(graph, data, is_master);
 
         for (size_t i = 0; i < data.size(); i++) {
             (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
@@ -109,4 +114,7 @@ void run_cd(context_t &ctx, int max_iter) {
     }
 
     timer_end();
+}
+
+}
 }

@@ -3,6 +3,17 @@
 
 #include "algorithms.hpp"
 
+// This is very ugly, but it greatly increases compilation time.
+// Compiling all the templates in graphlab.hpp is very heavy,
+// so by directly including all .cpp files we only need to
+// this once.
+#include "bfs.cpp"
+#include "pr.cpp"
+#include "cd.cpp"
+#include "conn.cpp"
+#include "lcc.cpp"
+#include "sssp.cpp"
+
 
 using namespace std;
 
@@ -93,17 +104,17 @@ int main(int argc, char **argv) {
     };
 
     if (algorithm == "bfs") {
-        run_bfs(ctx, directed, traverse_source_vertex);
+        graphalytics::bfs::run(ctx, directed, traverse_source_vertex);
     } else if (algorithm == "conn") {
-        run_conn(ctx);
+        graphalytics::conn::run(ctx);
     } else if (algorithm == "pr") {
-        run_pr(ctx, directed, pr_damping_factor, max_iter);
+        graphalytics::pr::run(ctx, directed, pr_damping_factor, max_iter);
     } else if (algorithm == "cd") {
-        run_cd(ctx, max_iter);
+        graphalytics::cd::run(ctx, max_iter);
     } else if (algorithm == "lcc") {
-        run_lcc(ctx, directed);
+        graphalytics::lcc::run(ctx, directed);
     } else if (algorithm == "sssp") {
-        run_sssp(ctx, directed, traverse_source_vertex);
+        graphalytics::sssp::run(ctx, directed, traverse_source_vertex);
     } else {
         dc.cerr() << "Unknown algorithm specified: " << algorithm << endl;
         return EXIT_FAILURE;
@@ -115,7 +126,7 @@ int main(int argc, char **argv) {
         file_stream->close();
 
         if (!good) {
-            dc.cerr() << "error occured while writing to file while write to file" << endl;
+            dc.cerr() << "error occured while writing to file" << endl;
             return EXIT_FAILURE;
         }
     }

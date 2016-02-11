@@ -4,6 +4,9 @@
 #include "algorithms.hpp"
 #include "utils.hpp"
 
+namespace graphalytics {
+namespace conn {
+
 using namespace std;
 
 typedef graphlab::vertex_id_type vertex_data_type;
@@ -64,8 +67,9 @@ class weakly_connected_components :
 
 
 
-void run_conn(context_t &ctx) {
-    timer_start();
+void run(context_t &ctx) {
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // load graph
     timer_next("load graph");
@@ -86,7 +90,7 @@ void run_conn(context_t &ctx) {
     if (ctx.output_stream) {
         timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-        collect_vertex_data(graph, data);
+        collect_vertex_data(graph, data, is_master);
 
         for (size_t i = 0; i < data.size(); i++) {
             (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
@@ -94,4 +98,7 @@ void run_conn(context_t &ctx) {
     }
 
     timer_end();
+}
+
+}
 }

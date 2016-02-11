@@ -4,6 +4,10 @@
 #include "algorithms.hpp"
 #include "utils.hpp"
 
+
+namespace graphalytics {
+namespace lcc {
+
 using namespace std;
 
 class vertex_data_type;
@@ -139,8 +143,9 @@ class triangle_count :
 
 
 
-void run_lcc(context_t& ctx, bool directed) {
-    timer_start();
+void run(context_t& ctx, bool directed) {
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // process parmaeters
     global_directed = directed;
@@ -164,7 +169,7 @@ void run_lcc(context_t& ctx, bool directed) {
     if (ctx.output_stream) {
         timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-        collect_vertex_data(graph, data);
+        collect_vertex_data(graph, data, is_master);
 
         for (size_t i = 0; i < data.size(); i++) {
             (*ctx.output_stream) << data[i].first << " " << data[i].second.clustering_coef << endl;
@@ -172,4 +177,7 @@ void run_lcc(context_t& ctx, bool directed) {
     }
 
     timer_end();
+}
+
+}
 }

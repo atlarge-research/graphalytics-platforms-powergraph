@@ -103,47 +103,6 @@ class histogram {
 };
 
 template <typename T>
-class vector_reducer {
-    std::vector<T> data;
-
-    public:
-        vector_reducer() {
-            //
-        }
-
-        vector_reducer(const vector_reducer<T>& other) {
-            data = other.data;
-        }
-
-        void add(T t) {
-            data.push_back(t);
-        }
-
-        vector_reducer<T>& operator+=(const vector_reducer<T>& other) {
-            data.insert(data.end(), other.data.begin(), other.data.end());
-            return *this;
-        }
-
-        vector_reducer<T>& operator=(const vector_reducer<T>& other) {
-            data = other.data;
-            return *this;
-        }
-
-        const std::vector<T>& get() const {
-            return data;
-        }
-
-        void save(graphlab::oarchive& oarc) const {
-            oarc << data;
-        }
-
-        void load(graphlab::iarchive& iarc) {
-            iarc >> data;
-        }
-};
-
-
-template <typename T>
 struct min_reducer : public graphlab::IS_POD_TYPE {
     T value;
 
@@ -168,18 +127,33 @@ std::pair<B, A> reverse(std::pair<A, B> p) {
 }
 
 template <typename G>
-void add_vertex_to_vector(const typename G::vertex_type& v,
-        vector_reducer<std::pair<typename G::vertex_id_type,
-                                 typename G::vertex_data_type> > result) {
-    result.add(std::make_pair(v.id(), v.data()));
-}
-
-template <typename G>
 void collect_vertex_data(G &graph,
         std::vector<std::pair<typename G::vertex_id_type,
-                              typename G::vertex_data_type> > &result) {
-    result = graph.template fold_vertices<vector_reducer<std::pair<typename G::vertex_id_type,
-                                                                   typename G::vertex_data_type> > >(add_vertex_to_vector<G>).get();
+                              typename G::vertex_data_type> > &result,
+                              bool originator) {
+
+    for (size_t i = 0, n = graph.num_local_vertices(); i < n; i++) {
+        const typename G::local_vertex_type &v = graph.l_vertex(i);
+
+        if (v.owned()) {
+            result.push_back(std::make_pair(v.global_id(), v.data()));
+        }
+    }
+
+    if (originator) {
+        std::vector<std::pair<typename G::vertex_id_type,
+                              typename G::vertex_data_type> > buffer;
+
+        for (size_t pid = 1; pid < graph.dc().numprocs(); pid++) {
+            graph.dc().recv_from(pid, buffer);
+            result.insert(result.end(), buffer.begin(), buffer.end());
+            buffer.clear();
+        }
+
+    } else {
+        graph.dc().send_to(0, result);
+        result.clear();
+    }
 }
 
 template <typename D>
@@ -255,7 +229,7 @@ bool parse_edge_line(G &graph, const std::string &file, const std::string &line,
         return false;
     }
 
-    if (source != target) {
+    if (source == target) {
         return true;
     }
 
@@ -283,29 +257,35 @@ static double timer() {
     return tv.tv_sec + tv.tv_usec / 1000000.0;
 }
 
+static bool timer_enabled;
 static std::vector<std::pair<std::string, double> > timers;
 
-static void timer_start() {
+static void timer_start(bool enabled=true) {
     timers.clear();
+    timer_enabled = enabled;
 }
 
 static void timer_next(std::string name) {
-    timers.push_back(std::make_pair(name, timer()));
+    if (timer_enabled) {
+        timers.push_back(std::make_pair(name, timer()));
+    }
 }
 
 static void timer_end() {
-    timer_next("end");
+    if (timer_enabled) {
+        timer_next("end");
 
-    std::cerr << "Timing results:" << std::endl;
+        std::cerr << "Timing results:" << std::endl;
 
-    for (size_t i = 0; i < timers.size() - 1; i++) {
-        std::string &name = timers[i].first;
-        double time = timers[i + 1].second - timers[i].second;
+        for (size_t i = 0; i < timers.size() - 1; i++) {
+            std::string &name = timers[i].first;
+            double time = timers[i + 1].second - timers[i].second;
 
-        std::cerr << " - "  << name << ": " << time << " sec" <<  std::endl;
+            std::cerr << " - "  << name << ": " << time << " sec" <<  std::endl;
+        }
+
+        timers.clear();
     }
-
-    timers.clear();
 }
 
 #endif

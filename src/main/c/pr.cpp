@@ -5,6 +5,9 @@
 #include "utils.hpp"
 
 
+namespace graphalytics {
+namespace pr {
+
 using namespace std;
 
 static double global_damping_factor;
@@ -70,9 +73,10 @@ void set_total_residual(typename engine_type::icontext_type& context, vertex_dat
 }
 
 
-void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) {
+void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
     typedef graphlab::omni_engine<pagerank> engine_type;
-    timer_start();
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // process parameters
     global_directed = directed;
@@ -107,12 +111,17 @@ void run_pr(context_t &ctx, bool directed, double damping_factor, int max_iter) 
     if (ctx.output_stream) {
         timer_next("print output");
          vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-         collect_vertex_data(graph, data);
+         collect_vertex_data(graph, data, is_master);
 
-         for (size_t i = 0; i < data.size(); i++) {
-             (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
+         if (is_master) {
+             for (size_t i = 0; i < data.size(); i++) {
+                 (*ctx.output_stream) << data[i].first << " " << data[i].second << endl;
+             }
          }
     }
 
     timer_end();
+}
+
+}
 }

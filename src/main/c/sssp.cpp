@@ -4,6 +4,10 @@
 #include "algorithms.hpp"
 #include "utils.hpp"
 
+
+namespace graphalytics {
+namespace sssp {
+
 using namespace std;
 
 typedef double vertex_data_type;
@@ -69,8 +73,9 @@ bool edge_data_parser(const string &line, double &data) {
     return start < end;
 }
 
-void run_sssp(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
-    timer_start();
+void run(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
+    bool is_master = ctx.dc.procid() == 0;
+    timer_start(is_master);
 
     // process parameters
     global_directed = directed;
@@ -95,7 +100,7 @@ void run_sssp(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
     if (ctx.output_stream) {
     	timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
-        collect_vertex_data(graph, data);
+        collect_vertex_data(graph, data, is_master);
 
         for (size_t i = 0; i < data.size(); i++) {
             vertex_data_type d = data[i].second;
@@ -104,12 +109,16 @@ void run_sssp(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
             // then the vertex is not connected to the source vertex.
             // According to specs, the output should be +inf
             if (d == numeric_limits<vertex_data_type>::max()) {
-                d = numeric_limits<vertex_data_type>::infinity();
+                (*ctx.output_stream) << data[i].first << " Infinity" << endl;
+            } else {
+                (*ctx.output_stream) << data[i].first << " " << d << endl;
             }
 
-            (*ctx.output_stream) << data[i].first << " " << d << endl;
         }
     }
 
     timer_end();
+}
+
+}
 }
