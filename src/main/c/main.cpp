@@ -82,17 +82,19 @@ int main(int argc, char **argv) {
     ostream *output_stream = NULL;
     ofstream *file_stream = NULL;
 
-    if (output_console) {
-        output_stream = &dc.cout();
-    } else if (!output_file.empty()) {
-        file_stream = new ofstream(output_file.c_str(), ofstream::out);
+    if (dc.procid() == 0) { // only master writes output file
+        if (output_console) {
+            output_stream = &dc.cout();
+        } else if (!output_file.empty()) {
+            file_stream = new ofstream(output_file.c_str(), ofstream::out);
 
-        if (!file_stream->good()) {
-            dc.cerr() << "error occured while opening file" << endl;
-            return EXIT_FAILURE;
+            if (!file_stream->good()) {
+                dc.cerr() << "error occured while opening file" << endl;
+                return EXIT_FAILURE;
+            }
+
+            output_stream = file_stream;
         }
-
-        output_stream = file_stream;
     }
 
     context_t ctx = {
