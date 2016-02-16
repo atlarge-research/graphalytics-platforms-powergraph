@@ -79,13 +79,12 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+    bool output_enabled = false;
     ostream *output_stream = NULL;
     ofstream *file_stream = NULL;
 
-    if (dc.procid() == 0) { // only master writes output file
-        if (output_console) {
-            output_stream = &dc.cout();
-        } else if (!output_file.empty()) {
+    if (!output_file.empty()) {
+        if (dc.procid() == 0) {
             file_stream = new ofstream(output_file.c_str(), ofstream::out);
 
             if (!file_stream->good()) {
@@ -95,14 +94,20 @@ int main(int argc, char **argv) {
 
             output_stream = file_stream;
         }
+
+        output_enabled = true;
+    } else {
+        output_stream = &dc.cout();
+        output_enabled = true;
     }
 
     context_t ctx = {
-        .vertex_file = vertex_file,
-        .edge_file = edge_file,
-        .dc = dc,
-        .clopts = clopts,
-        .output_stream = output_stream
+        vertex_file : vertex_file,
+        edge_file : edge_file,
+        dc : dc,
+        clopts : clopts,
+        output_enabled : output_enabled,
+        output_stream : output_stream
     };
 
     if (algorithm == "bfs") {

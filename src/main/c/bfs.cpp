@@ -89,7 +89,7 @@ void run(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
     engine.start();
 
     // print output
-    if (ctx.output_stream) {
+    if (ctx.output_enabled) {
     	timer_next("print output");
         vector<pair<graphlab::vertex_id_type, vertex_data_type> > data;
         collect_vertex_data(graph, data, is_master);

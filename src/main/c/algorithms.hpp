@@ -10,6 +10,7 @@ struct context_t {
     std::string edge_file;
     graphlab::distributed_control& dc;
     graphlab::command_line_options& clopts;
+    bool output_enabled;
     std::ostream *output_stream;
 };
 
