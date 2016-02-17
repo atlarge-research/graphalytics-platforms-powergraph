@@ -1,0 +1,83 @@
+StartTime: 1455729578755
+[node018:05215] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../../../..][../../../../../../../..]
+GRAPHLAB_SUBNET_ID/GRAPHLAB_SUBNET_MASK environment variables not defined.
+Using default values
+Subnet ID: 0.0.0.0
+Subnet Mask: 0.0.0.0
+Will find first IPv4 non-loopback address matching the subnet
+[1;32mINFO:     dc.cpp(init:573): Cluster of 1 instances created.
+[0mGRANULA - OperationUuid:4735287598633888227 ActorType:PowerGraph ActorId:Id.Unique MissionType:Job MissionId:Id.Unique InfoName:StartTime InfoValue:1455729580356 Timestamp:1455729580356
+GRANULA - OperationUuid:8450407967959744636 ActorType:PowerGraph ActorId:Id.Unique MissionType:LoadGraph MissionId:Id.Unique InfoName:StartTime InfoValue:1455729580356 Timestamp:1455729580356
+[1;32mINFO:     distributed_graph.hpp(set_ingress_method:3214): Automatically determine ingress method: grid
+[0m[1;32mINFO:     distributed_graph.hpp(load_from_posixfs:2199): Loading graph from file: /var/scratch/thegeman/graphalytics-graphs/cit-Patents.v
+[0m[1;32mINFO:     distributed_graph.hpp(load_from_posixfs:2199): Loading graph from file: /var/scratch/thegeman/graphalytics-graphs/cit-Patents.e
+[0mINFO:     distributed_graph.hpp(finalize:711): Distributed graph: enter finalize
+[0m[1;32mINFO:     distributed_ingress_base.hpp(finalize:199): Finalizing Graph...
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Post Flush
+	 Heap: 480 MB
+	 Allocated: 466.373 MB
+[0mINFO:     distributed_ingress_base.hpp(finalize:259): Graph Finalize: constructing local graph
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Finished populating local graph.
+	 Heap: 1116.62 MB
+	 Allocated: 537.01 MB
+[0mINFO:     distributed_ingress_base.hpp(finalize:304): Graph Finalize: finalizing local graph.
+[0mINFO:     local_graph.hpp(finalize:278): Graph finalized in 3.63305 secs
+[0mINFO:     distributed_ingress_base.hpp(finalize:307): Local graph info: 
+[0m	 nverts: 3774768
+[0m	 nedges: 16518947
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Finished finalizing local graph.
+	 Heap: 1620.75 MB
+	 Allocated: 720.651 MB
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Finished adding vertex data
+	 Heap: 1620.75 MB
+	 Allocated: 661.603 MB
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Finihsed allocating lvid2record
+	 Heap: 1793.55 MB
+	 Allocated: 834.361 MB
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Finished synchronizing vertex (meta)data
+	 Heap: 1937.55 MB
+	 Allocated: 984.778 MB
+[0mINFO:     distributed_ingress_base.hpp(exchange_global_info:521): Graph Finalize: exchange global statistics 
+[0m[1;32mINFO:     distributed_ingress_base.hpp(exchange_global_info:546): Graph info: 
+	 nverts: 3774768
+	 nedges: 16518947
+	 nreplicas: 3774768
+	 replication factor: 1
+[0mGRANULA - OperationUuid:8450407967959744636 ActorType:PowerGraph ActorId:Id.Unique MissionType:LoadGraph MissionId:Id.Unique InfoName:EndTime InfoValue:1455729594900 Timestamp:1455729594900
+INFO:     omni_engine.hpp(omni_engine:191): Using the Synchronous engine.
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: Before Engine Initialization
+	 Heap: 1937.55 MB
+	 Allocated: 837.998 MB
+[0mINFO:     memory_info.cpp(log_usage:90): Memory Info: After Engine Initialization
+	 Heap: 1937.55 MB
+	 Allocated: 915.42 MB
+[0mGRANULA - OperationUuid:6615896438274525268 ActorType:PowerGraph ActorId:Id.Unique MissionType:ProcessGraph MissionId:Id.Unique InfoName:StartTime InfoValue:1455729594912 Timestamp:1455729594912
+[1;32mINFO:     synchronous_engine.hpp(start:1299): Iteration counter will only output every 5 seconds.
+[0m[1;32mINFO:     synchronous_engine.hpp(start:1314): 0: Starting iteration: 0
+[0m[1;32mINFO:     synchronous_engine.hpp(start:1363): 	Active vertices: 1
+[0m[1;32mINFO:     synchronous_engine.hpp(start:1412): 	 Running Aggregators
+[0mUpdates: 1953
+GRANULA - OperationUuid:6615896438274525268 ActorType:PowerGraph ActorId:Id.Unique MissionType:ProcessGraph MissionId:Id.Unique InfoName:EndTime InfoValue:1455729594947 Timestamp:1455729594947
+GRANULA - OperationUuid:5598299757938615067 ActorType:PowerGraph ActorId:Id.Unique MissionType:OffloadGraph MissionId:Id.Unique InfoName:StartTime InfoValue:1455729594947 Timestamp:1455729594947
+[1;32mINFO:     synchronous_engine.hpp(start:1424): 10 iterations completed.
+[0mINFO:     synchronous_engine.hpp(start:1441): Compute Balance: 0.026449 
+[0mTiming results:
+ - load graph: 14.5437 sec
+ - initialize engine: 0.011688 sec
+ - run algorithm: 0.0356321 sec
+ - print output: 2.81379 sec
+GRANULA - OperationUuid:5598299757938615067 ActorType:PowerGraph ActorId:Id.Unique MissionType:OffloadGraph MissionId:Id.Unique InfoName:EndTime InfoValue:1455729597761 Timestamp:1455729597761
+GRANULA - OperationUuid:4735287598633888227 ActorType:PowerGraph ActorId:Id.Unique MissionType:Job MissionId:Id.Unique InfoName:EndTime InfoValue:1455729597761 Timestamp:1455729597761
+INFO:     dc.cpp(~distributed_control:166): Shutting down distributed control 
+[0mINFO:     dc_tcp_comm.cpp(close:247): Closing listening socket
+[0mINFO:     dc_tcp_comm.cpp(send_loop:653): Send loop Stopped
+[0mINFO:     dc_tcp_comm.cpp(close:267): Closing outgoing sockets
+[0mINFO:     dc_tcp_comm.cpp(receive_loop:594): Receive loop Stopped
+[0mINFO:     dc_tcp_comm.cpp(close:285): Closing incoming sockets
+[0mINFO:     dc.cpp(~distributed_control:198): Bytes Sent: 199289562
+[0mINFO:     dc.cpp(~distributed_control:199): Calls Sent: 3164
+[0mINFO:     dc.cpp(~distributed_control:200): Network Sent: 199289562
+[0mINFO:     dc.cpp(~distributed_control:201): Bytes Received: 199264250
+[0mINFO:     dc.cpp(~distributed_control:202): Calls Received: 3164
+[0m
+EndTime: 1455729598132
