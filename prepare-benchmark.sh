@@ -17,13 +17,24 @@
 
 export platform="powergraph"
 
+# Set Library jar
+export LIBRARY_JAR=`ls lib/graphalytics-*std*.jar`
+GRANULA_ENABLED=$(grep -E "^benchmark.run.granula.enabled[	 ]*[:=]" $config/granula.properties | sed 's/benchmark.run.granula.enabled[\t ]*[:=][\t ]*\([^\t ]*\).*/\1/g' | head -n 1)
+if [ "$GRANULA_ENABLED" = "true" ] ; then
+ if ! find lib -name "graphalytics-*granula*.jar" | grep -q '.'; then
+    echo "Granula cannot be enabled due to missing library jar" >&2
+ else
+    export LIBRARY_JAR=`ls lib/graphalytics-*granula*.jar`
+ fi
+fi
+
 # Build binaries
 if [ -z $POWERGRAPH_HOME ]; then
     POWERGRAPH_HOME=`awk -F' *= *' '{ if ($1 == "powergraph.home") print $2 }' $config/powergraph.properties`
 fi
 
 if [ -z $POWERGRAPH_HOME ]; then
-    echo "Error: home directory for GraphMat not specified."
+    echo "Error: home directory for PowerGraph not specified."
     echo "Define the environment variable \$POWERGRAPH_HOME or modify powergraph.home in $config/powergraph.properties"
     exit 1
 fi
@@ -34,8 +45,14 @@ fi
 
 DISABLE_JVM=1
 
-mkdir -p bin
-(cd bin && cmake -DCMAKE_BUILD_TYPE=Release ../src/ -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=$DISABLE_JVM -DNO_MPI=$DISABLE_MPI && make all)
+mkdir -p bin/standard
+(cd bin/standard && cmake -DCMAKE_BUILD_TYPE=Release ../../src -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=$DISABLE_JVM -DNO_MPI=$DISABLE_MPI && make all)
+
+if [ "$GRANULA_ENABLED" = "true" ] ; then
+ mkdir -p bin/granula
+ (cd bin/granula && cmake -DCMAKE_BUILD_TYPE=Release -DGRANULA=1 ../../src -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=$DISABLE_JVM -DNO_MPI=$DISABLE_MPI && make all)
+fi
+
 
 if [ $? -ne 0 ]
 then

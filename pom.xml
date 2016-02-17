@@ -4,7 +4,7 @@
 	<groupId>nl.tudelft.graphalytics</groupId>
 	<artifactId>graphalytics-platforms-powergraph</artifactId>
 	<version>0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,12 +19,27 @@
 		<tag>HEAD</tag>
 	</scm>
 
+	<modules>
+		<module>graphalytics-platforms-powergraph-platform</module>
+		<module>graphalytics-platforms-powergraph-std</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>granula</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>granula-model-powergraph</module>
+				<module>graphalytics-platforms-powergraph-granula</module>
+			</modules>
+		</profile>
+	</profiles>
+
+
+
 	<dependencies>
-		<dependency>
-			<groupId>nl.tudelft.graphalytics</groupId>
-			<artifactId>graphalytics-core</artifactId>
-			<version>${graphalytics.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>nl.tudelft.graphalytics</groupId>
 			<artifactId>graphalytics-core</artifactId>
@@ -33,122 +48,10 @@
 			<classifier>resources</classifier>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>nl.tudelft.graphalytics</groupId>
-			<artifactId>graphalytics-validation</artifactId>
-			<version>${graphalytics.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!-- Java compiler settings -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<!-- Maven Shade plugin used by platform modules to create fat JARs -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<minimizeJar>false</minimizeJar>
-					<artifactSet>
-						<excludes>
-							<exclude>*:*:*:resources</exclude>
-						</excludes>
-					</artifactSet>
-					<filters>
-						<filter>
-							<artifact>*:*</artifact>
-							<excludes>
-								<exclude>META-INF/*.SF</exclude>
-								<exclude>META-INF/*.DSA</exclude>
-								<exclude>META-INF/*.RSA</exclude>
-							</excludes>
-						</filter>
-					</filters>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Maven release management -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<tagNameFormat>v@{project.version}</tagNameFormat>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<pushChanges>false</pushChanges>
-				</configuration>
-			</plugin>
-
-			<!-- Plugin for ensuring the presence of license information -->
-			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>2.10</version>
-				<configuration>
-					<header>http://www.pds.ewi.tudelft.nl/~mihai/copyright-notice-template</header>
-					<properties>
-						<owner>Delft University of Technology</owner>
-						<project.inceptionYear>2015</project.inceptionYear>
-					</properties>
-					<excludes>
-						<exclude>README</exclude>
-						<exclude>LICENSE</exclude>
-						<exclude>pom.xml</exclude>
-						<exclude>src/test/resources/**</exclude>
-						<exclude>src/main/resources/**</exclude>
-						<exclude>src/main/assembly/**</exclude>
-						<exclude>config-template/**</exclude>
-					</excludes>
-					<mapping>
-						<java>SLASHSTAR_STYLE</java>
-					</mapping>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- Plugin for creating distribution archives -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
