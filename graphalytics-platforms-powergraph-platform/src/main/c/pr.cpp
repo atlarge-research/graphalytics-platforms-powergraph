@@ -84,10 +84,11 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
 
 #ifdef GRANULA
     granula::operation powergraphJob("PowerGraph", "Id.Unique", "Job", "Id.Unique");
-    cout<<powergraphJob.getOperationInfo("StartTime", powergraphJob.getEpoch())<<endl;
-
     granula::operation loadGraph("PowerGraph", "Id.Unique", "LoadGraph", "Id.Unique");
-    cout<<loadGraph.getOperationInfo("StartTime", loadGraph.getEpoch())<<endl;
+    if(is_master) {
+        cout<<powergraphJob.getOperationInfo("StartTime", powergraphJob.getEpoch())<<endl;
+        cout<<loadGraph.getOperationInfo("StartTime", loadGraph.getEpoch())<<endl;
+    }
 #endif
 
     // process parameters
@@ -103,7 +104,9 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
     graph.transform_vertices(boost::bind(init_vertex, _1, graph.num_vertices()));
 
 #ifdef GRANULA
-    cout<<loadGraph.getOperationInfo("EndTime", loadGraph.getEpoch())<<endl;
+    if(is_master) {
+        cout<<loadGraph.getOperationInfo("EndTime", loadGraph.getEpoch())<<endl;
+    }
 #endif
 
     // load engine
@@ -121,7 +124,9 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
 
 #ifdef GRANULA
     granula::operation processGraph("PowerGraph", "Id.Unique", "ProcessGraph", "Id.Unique");
-    cout<<processGraph.getOperationInfo("StartTime", processGraph.getEpoch())<<endl;
+    if(is_master) {
+        cout<<processGraph.getOperationInfo("StartTime", processGraph.getEpoch())<<endl;
+    }
 #endif
 
     // run algorithm
@@ -129,12 +134,16 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
     engine.start();
 
 #ifdef GRANULA
-    cout<<processGraph.getOperationInfo("EndTime", processGraph.getEpoch())<<endl;
+    if(is_master) {
+        cout<<processGraph.getOperationInfo("EndTime", processGraph.getEpoch())<<endl;
+    }
 #endif
 
 #ifdef GRANULA
     granula::operation offloadGraph("PowerGraph", "Id.Unique", "OffloadGraph", "Id.Unique");
-    cout<<offloadGraph.getOperationInfo("StartTime", offloadGraph.getEpoch())<<endl;
+    if(is_master) {
+        cout<<offloadGraph.getOperationInfo("StartTime", offloadGraph.getEpoch())<<endl;
+    }
 #endif
 
     // print output
@@ -153,8 +162,10 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
     timer_end();
 
 #ifdef GRANULA
-    cout<<offloadGraph.getOperationInfo("EndTime", offloadGraph.getEpoch())<<endl;
-    cout<<powergraphJob.getOperationInfo("EndTime", powergraphJob.getEpoch())<<endl;
+    if(is_master) {
+        cout<<offloadGraph.getOperationInfo("EndTime", offloadGraph.getEpoch())<<endl;
+        cout<<powergraphJob.getOperationInfo("EndTime", powergraphJob.getEpoch())<<endl;
+    }
 #endif
 
 }
