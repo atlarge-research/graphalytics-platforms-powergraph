@@ -71,7 +71,13 @@ class triangle_count :
             } else {
                 size_t d = vertex.data().neighbors.size();
                 size_t t = last_msg;
-                vertex.data().clustering_coef = t / (d * (d - 1.0));
+
+                // Due to rounding errors, the results is sometimes not exactly
+                // 0.0 even when it should be. Explicitly set LCC to 0 if that
+                // is the case, other calculate it as tri / (degree * (degree - 1))
+                double lcc = (d < 2 || t == 0) ? 0.0 : double(t) / (d * (d - 1));
+
+                vertex.data().clustering_coef = lcc;
             }
         }
 
