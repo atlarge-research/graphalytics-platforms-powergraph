@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
 
     string algorithm = "";
     clopts.attach_option("algorithm", algorithm,
-            "Algorithm to use (bfs/pr/conn/cd/lcc)");
+            "Algorithm to use (bfs/pr/conn/cd/lcc/sssp)");
     clopts.add_positional("algorithm");
 
     int max_iter = 10;
