@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +45,13 @@ abstract public class PowerGraphJob {
 			args.add(outputFile.getAbsolutePath());
 		}
 
+		int numThreads = config.getInt("powergraph.num-threads", -1);
+
+		if (numThreads > 0) {
+			args.add("--ncpus");
+			args.add(String.valueOf(numThreads));
+		}
+
 		String argsString = "";
 
 		for (String arg: args) {
@@ -59,7 +65,6 @@ abstract public class PowerGraphJob {
 
 		ProcessBuilder pb = new ProcessBuilder(cmd.split(" "));
 		pb.redirectErrorStream(true);
-
 
 		Process process = pb.start();
 		InputStreamReader isr = new InputStreamReader(process.getInputStream());
