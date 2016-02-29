@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
         }
 
         output_enabled = true;
-    } else {
+    } else if (output_console) {
         output_stream = &dc.cout();
         output_enabled = true;
     }
