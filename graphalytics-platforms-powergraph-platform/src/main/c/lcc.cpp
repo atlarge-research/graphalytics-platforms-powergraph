@@ -27,6 +27,10 @@ class vertex_data_type {
         double clustering_coef;
         neighbors_type neighbors;
 
+        vertex_data_type() {
+            clustering_coef = 0.0;
+        }
+
         void save(graphlab::oarchive& oarc) const {
             oarc << clustering_coef << neighbors;
         }
