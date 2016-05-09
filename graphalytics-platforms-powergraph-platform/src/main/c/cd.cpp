@@ -1,5 +1,6 @@
-#include <graphlab.hpp>
 #include <boost/unordered_map.hpp>
+#include <cstdint>
+#include <graphlab.hpp>
 
 #include "algorithms.hpp"
 #include "utils.hpp"
@@ -14,7 +15,7 @@ namespace cd {
 
 using namespace std;
 
-typedef int label_type;
+typedef uint64_t label_type;
 typedef label_type vertex_data_type;
 typedef graphlab::empty edge_data_type;
 typedef histogram<label_type> gather_type;
