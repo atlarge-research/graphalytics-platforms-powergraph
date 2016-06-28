@@ -82,7 +82,7 @@ class histogram {
         void save(graphlab::oarchive& oarc) const {
             if (data == NULL) {
                 map_type tmp;
-                if (first_item != INVALID_ITEM) (*data)[first_item] = 1;
+                if (first_item != INVALID_ITEM) tmp[first_item] = 1;
                 oarc << tmp;
             } else {
                 oarc << *data;
@@ -92,7 +92,7 @@ class histogram {
         void load(graphlab::iarchive& iarc) {
             if (data) delete data;
             data = new map_type;
-            iarc >> data;
+            iarc >> *data;
         }
 
         ~histogram() {
