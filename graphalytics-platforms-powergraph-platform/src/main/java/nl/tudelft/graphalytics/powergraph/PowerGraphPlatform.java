@@ -86,27 +86,27 @@ public class PowerGraphPlatform implements Platform {
 		switch(benchmark.getAlgorithm()) {
 			case BFS:
 				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (BreadthFirstSearchParameters) params);
+						graphDirected, (BreadthFirstSearchParameters) params, benchmark.getId());
 				break;
 			case WCC:
 				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath,
-						graphDirected);
+						graphDirected, benchmark.getId());
 				break;
 			case LCC:
 				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath,
-						graphDirected);
+						graphDirected, benchmark.getId());
 				break;
 			case CDLP:
 				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (CommunityDetectionLPParameters) params);
+						graphDirected, (CommunityDetectionLPParameters) params, benchmark.getId());
 				break;
 			case PR:
 				job = new PageRankJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (PageRankParameters) params);
+						graphDirected, (PageRankParameters) params, benchmark.getId());
 				break;
 			case SSSP:
 				job = new SingleSourceShortestPathsJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (SingleSourceShortestPathsParameters) params);
+						graphDirected, (SingleSourceShortestPathsParameters) params, benchmark.getId());
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");

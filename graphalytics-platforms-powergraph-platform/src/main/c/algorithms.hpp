@@ -20,7 +20,8 @@ namespace graphalytics {
         void run(
                 context_t &ctx,
                 bool directed,
-                graphlab::vertex_id_type source);
+                graphlab::vertex_id_type source,
+                std::string job_id);
     }
 
     namespace pr {
@@ -28,31 +29,36 @@ namespace graphalytics {
                 context_t &ctx,
                 bool directed,
                 double damping_factor,
-                int max_iter);
+                int max_iter,
+                std::string job_id);
     }
 
     namespace cd {
         void run(
                 context_t &ctx,
-                int max_iter);
+                int max_iter,
+                std::string job_id);
     }
 
     namespace conn {
         void run(
-                context_t &ctx);
+                context_t &ctx,
+                std::string job_id);
     }
 
     namespace lcc {
         void run(
                 context_t &ctx,
-                bool directed);
+                bool directed,
+                std::string job_id);
     }
 
     namespace sssp {
         void run(
                 context_t &ctx,
                 bool directed,
-                graphlab::vertex_id_type source);
+                graphlab::vertex_id_type source,
+                std::string job_id);
     }
 }
 

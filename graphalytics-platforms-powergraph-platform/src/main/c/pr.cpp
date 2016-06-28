@@ -77,24 +77,30 @@ void set_total_residual(typename engine_type::icontext_type& context, vertex_dat
 }
 
 
-void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
+void run(context_t &ctx, bool directed, double damping_factor, int max_iter, string job_id) {
     typedef graphlab::omni_engine<pagerank> engine_type;
     bool is_master = ctx.dc.procid() == 0;
     timer_start(is_master);
 
 #ifdef GRANULA
+    granula::startMonitorProcess(getpid());
     granula::operation powergraphJob("PowerGraph", "Id.Unique", "Job", "Id.Unique");
     granula::operation loadGraph("PowerGraph", "Id.Unique", "LoadGraph", "Id.Unique");
     if(is_master) {
         cout<<powergraphJob.getOperationInfo("StartTime", powergraphJob.getEpoch())<<endl;
         cout<<loadGraph.getOperationInfo("StartTime", loadGraph.getEpoch())<<endl;
     }
+
+    granula::linkNode(job_id);
+    granula::linkProcess(getpid(), job_id);
 #endif
 
     // process parameters
     global_directed = directed;
     global_damping_factor = damping_factor;
     ctx.clopts.engine_args.set_option("max_iterations", max_iter);
+
+
 
     // load graph
     timer_next("load graph");
@@ -166,6 +172,7 @@ void run(context_t &ctx, bool directed, double damping_factor, int max_iter) {
         cout<<offloadGraph.getOperationInfo("EndTime", offloadGraph.getEpoch())<<endl;
         cout<<powergraphJob.getOperationInfo("EndTime", powergraphJob.getEpoch())<<endl;
     }
+    granula::stopMonitorProcess(getpid());
 #endif
 
 }

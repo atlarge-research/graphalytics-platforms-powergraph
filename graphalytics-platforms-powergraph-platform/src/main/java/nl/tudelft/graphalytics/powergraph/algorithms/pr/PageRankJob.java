@@ -10,8 +10,9 @@ import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 public class PageRankJob extends PowerGraphJob {
 	PageRankParameters params;
 
-	public PageRankJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, PageRankParameters params) {
-		super(config, verticesPath, edgesPath, graphDirected);
+	public PageRankJob(Configuration config, String verticesPath, String edgesPath,
+					   boolean graphDirected, PageRankParameters params, String jobId) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId);
 		this.params = params;
 	}
 

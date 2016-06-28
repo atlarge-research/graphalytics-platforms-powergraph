@@ -77,17 +77,21 @@ bool edge_data_parser(const string &line, double &data) {
     return start < end;
 }
 
-void run(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
+void run(context_t &ctx, bool directed, graphlab::vertex_id_type source, string job_id) {
     bool is_master = ctx.dc.procid() == 0;
     timer_start(is_master);
 
 #ifdef GRANULA
+    granula::startMonitorProcess(getpid());
     granula::operation powergraphJob("PowerGraph", "Id.Unique", "Job", "Id.Unique");
     granula::operation loadGraph("PowerGraph", "Id.Unique", "LoadGraph", "Id.Unique");
     if(is_master) {
         cout<<powergraphJob.getOperationInfo("StartTime", powergraphJob.getEpoch())<<endl;
         cout<<loadGraph.getOperationInfo("StartTime", loadGraph.getEpoch())<<endl;
     }
+
+    granula::linkNode(job_id);
+    granula::linkProcess(getpid(), job_id);
 #endif
 
     // process parameters
@@ -163,6 +167,7 @@ void run(context_t &ctx, bool directed, graphlab::vertex_id_type source) {
         cout<<offloadGraph.getOperationInfo("EndTime", offloadGraph.getEpoch())<<endl;
         cout<<powergraphJob.getOperationInfo("EndTime", powergraphJob.getEpoch())<<endl;
     }
+    granula::stopMonitorProcess(getpid());
 #endif
 
 }

@@ -50,9 +50,11 @@ public class PageRankJobTest extends PageRankValidationTest {
 
 		Utils.writeEdgeToFile(graph, directed, edgesFile);
 		Utils.writeVerticesToFile(graph, verticesFile);
+
+		String jobId = "RandomJobId";
 		
 		PageRankJob job = new PageRankJob(
-				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, parameters);
+				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, parameters, jobId);
 		job.setOutputFile(outputFile);
 		job.run();
 		

@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package nl.tudelft.pds.granula.modeller.powergraph.operation;
+package nl.tudelft.granula.modeller.platform.operation;
 
-import nl.tudelft.pds.granula.modeller.powergraph.PowerGraphType;
-import nl.tudelft.pds.granula.modeller.model.operation.ConcreteOperationModel;
-import nl.tudelft.pds.granula.modeller.rule.linking.UniqueParentLinking;
-import nl.tudelft.pds.granula.modeller.rule.visual.MainInfoTableVisualization;
+import nl.tudelft.granula.modeller.Type;
+import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
+import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
 
 import java.util.ArrayList;
 
-public class BspSuperstep extends ConcreteOperationModel {
+public class LoadGraph extends RealtimeOperationModel {
 
-    public BspSuperstep() {
-        super(PowerGraphType.Bsp, PowerGraphType.Superstep);
+    public LoadGraph() {
+        super(Type.PowerGraph, Type.LoadGraph);
     }
 
     public void loadRules() {
         super.loadRules();
-        addLinkingRule(new UniqueParentLinking(PowerGraphType.PowerGraph, PowerGraphType.ProcessGraph));
 
+        addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
 
-        addVisualDerivation(new MainInfoTableVisualization(1,
+        String summary = "LoadGraph.";
+        addInfoDerivation(new SimpleSummaryDerivation(11, summary));
+
+        addVisualDerivation(new TableVisualization(1, "MainInfo",
                 new ArrayList<String>() {{
-//                    add("InputMethod");
                 }}));
     }
 

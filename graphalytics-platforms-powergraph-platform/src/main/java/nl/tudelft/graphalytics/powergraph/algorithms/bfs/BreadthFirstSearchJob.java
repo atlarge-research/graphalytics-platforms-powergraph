@@ -10,9 +10,10 @@ import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 public class BreadthFirstSearchJob extends PowerGraphJob {
 	
 	BreadthFirstSearchParameters params;
-	
-	public BreadthFirstSearchJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, BreadthFirstSearchParameters params) {
-		super(config, verticesPath, edgesPath, graphDirected);
+
+	public BreadthFirstSearchJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
+								 BreadthFirstSearchParameters params, String jobId) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId);
 		this.params = params;
 	}
 

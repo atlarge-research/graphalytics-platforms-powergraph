@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package nl.tudelft.pds.granula.modeller.powergraph.operation;
+package nl.tudelft.granula.modeller.platform.operation;
 
-import nl.tudelft.pds.granula.modeller.powergraph.PowerGraphType;
-import nl.tudelft.pds.granula.modeller.model.operation.ConcreteOperationModel;
-import nl.tudelft.pds.granula.modeller.rule.linking.UniqueParentLinking;
-import nl.tudelft.pds.granula.modeller.rule.visual.MainInfoTableVisualization;
+import nl.tudelft.granula.modeller.Type;
+import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
+import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
 
 import java.util.ArrayList;
 
-public class ProcessGraph extends ConcreteOperationModel {
+public class ProcessGraph extends RealtimeOperationModel {
 
     public ProcessGraph() {
-        super(PowerGraphType.PowerGraph, PowerGraphType.ProcessGraph);
+        super(Type.PowerGraph, Type.ProcessGraph);
     }
 
     public void loadRules() {
         super.loadRules();
 
-        addLinkingRule(new UniqueParentLinking(PowerGraphType.PowerGraph, PowerGraphType.Job));
+        addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
 
 
-        addVisualDerivation(new MainInfoTableVisualization(1,
+        String summary = "ProcessGraph.";
+        addInfoDerivation(new SimpleSummaryDerivation(11, summary));
+
+        addVisualDerivation(new TableVisualization(1, "MainInfo",
                 new ArrayList<String>() {{
                 }}));
     }

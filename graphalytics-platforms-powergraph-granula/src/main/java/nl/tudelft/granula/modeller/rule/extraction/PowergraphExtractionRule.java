@@ -1,23 +1,24 @@
-package nl.tudelft.pds.granula.modeller.rule.extraction;
+package nl.tudelft.granula.modeller.rule.extraction;
 
-import nl.tudelft.pds.granula.archiver.source.DataStream;
-import nl.tudelft.pds.granula.archiver.source.record.Record;
-import nl.tudelft.pds.granula.archiver.source.record.RecordLocation;
-import nl.tudelft.pds.granula.modeller.rule.extraction.ExtractionRule;
-import nl.tudelft.pds.granula.util.UuidGenerator;
+import nl.tudelft.granula.modeller.rule.extraction.ExtractionRule;
+import nl.tudelft.granula.modeller.source.DataStream;
+import nl.tudelft.granula.modeller.source.log.Log;
+import nl.tudelft.granula.modeller.source.log.LogLocation;
+import nl.tudelft.granula.util.UuidGenerator;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wing on 21-8-15.
  */
-public class PowerGraphExtractionRule extends ExtractionRule {
+public class PowergraphExtractionRule extends ExtractionRule {
 
-    public PowerGraphExtractionRule(int level) {
+    public PowergraphExtractionRule(int level) {
         super(level);
     }
 
@@ -34,11 +35,9 @@ public class PowerGraphExtractionRule extends ExtractionRule {
         return text;
     }
 
-    public List<Record> extractRecordFromInputStream(DataStream dataStream) {
+    public List<Log> extractLogFromInputStream(DataStream dataStream) {
 
-        //String parsedLog = parseLog(dataStream);
-
-        List<Record> granularlogList = new ArrayList<>();
+        List<Log> granularlogList = new ArrayList<>();
 
         try {
             BufferedReader br = new BufferedReader(
@@ -46,13 +45,19 @@ public class PowerGraphExtractionRule extends ExtractionRule {
 
             String line = null;
             int lineCount = 0;
+
             while ((line = br.readLine()) != null) {
                 lineCount++;
 
                 if(line.contains("GRANULA") ) {
-                    Record record = extractRecord(line);
 
-                    RecordLocation trace = new RecordLocation();
+                    if(line.contains("PowerGraph") && line.contains("Job")) {
+                        continue;
+                    }
+
+                    Log log = extractRecord(line);
+
+                    LogLocation trace = new LogLocation();
 
                     String codeLocation;
                     String logFilePath;
@@ -64,9 +69,9 @@ public class PowerGraphExtractionRule extends ExtractionRule {
                     logFilePath = "unspecified";
 
                     trace.setLocation(logFilePath, lineCount, codeLocation);
-                    record.setRecordLocation(trace);
+                    log.setLocation(trace);
 
-                    granularlogList.add(record);
+                    granularlogList.add(log);
                 }
             }
 
@@ -83,27 +88,27 @@ public class PowerGraphExtractionRule extends ExtractionRule {
 
 
 
-    public Record extractRecord(String line) {
-        Record record = new Record();
+    public Log extractRecord(String line) {
+        Log log = new Log();
 
         String granularLog = line.split("GRANULA ")[1];
-        String[] recordAttrs = granularLog.split("\\s+");
+        String[] logAttrs = granularLog.split("\\s+");
 
-        for (String recordAttr : recordAttrs) {
-            if (recordAttr.contains(":")) {
-                String[] attrKeyValue = recordAttr.split(":");
+        for (String logAttr : logAttrs) {
+            if (logAttr.contains(":")) {
+                String[] attrKeyValue = logAttr.split(":");
                 if (attrKeyValue.length == 2) {
 
                     String name = attrKeyValue[0];
                     String value = attrKeyValue[1];
                     String unescapedValue = value.replaceAll("\\[COLON\\]", ":").replaceAll("\\[SPACE\\]", " ");
 
-                    record.addRecordInfo(name, unescapedValue);
+                    log.addLogInfo(name, unescapedValue);
                 } else {
-                    record.addRecordInfo(attrKeyValue[0], "");
+                    log.addLogInfo(attrKeyValue[0], "");
                 }
             }
         }
-        return record;
+        return log;
     }
 }

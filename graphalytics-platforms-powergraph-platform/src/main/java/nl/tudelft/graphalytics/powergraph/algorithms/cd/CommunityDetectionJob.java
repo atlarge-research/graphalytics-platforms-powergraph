@@ -10,8 +10,9 @@ import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
 public class CommunityDetectionJob extends PowerGraphJob {
 	private CommunityDetectionLPParameters params;
 	
-	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, CommunityDetectionLPParameters params) {
-		super(config, verticesPath, edgesPath, graphDirected);
+	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
+								 CommunityDetectionLPParameters params, String jobId) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId);
 		this.params = params;
 	}
 

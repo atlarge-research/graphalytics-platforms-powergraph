@@ -31,7 +31,6 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
-				<module>granula-model-powergraph</module>
 				<module>graphalytics-platforms-powergraph-granula</module>
 			</modules>
 		</profile>

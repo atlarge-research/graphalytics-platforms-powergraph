@@ -1,5 +1,14 @@
 #pragma once
 #include <chrono>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 #ifdef GRANULA
 
@@ -45,6 +54,86 @@ namespace granula {
                     (chrono::system_clock::now().time_since_epoch()).count());
             }
     };
+
+
+    void error(const char *msg) {
+        perror(msg);
+        exit(0);
+    }
+
+    void sendMonitorMessage(std::string message) {
+
+        // server: for lookup of server address
+        // serv_addr: serv_addr
+        // portno: port number
+        // buffer: message content
+        // n = message length counter
+        // sockfd: socket tool
+        int sockfd, portno, n;
+        struct sockaddr_in serv_addr;
+        struct hostent *server;
+        char buffer[512];
+
+        portno = 2656;
+
+        // setup socket object
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0)
+            error("ERROR opening socket");
+
+        // set up server by hostname
+        server = gethostbyname("localhost");
+        if (server == NULL) {
+            fprintf(stderr, "ERROR, no such host\n");
+            exit(0);
+        }
+
+        // set up server address using server object
+        bzero((char *) &serv_addr, sizeof(serv_addr));
+        serv_addr.sin_family = AF_INET;
+        bcopy((char *) server->h_addr, (char *) &serv_addr.sin_addr.s_addr, server->h_length);
+
+        serv_addr.sin_port = htons(portno);
+
+        // connect socket to server address
+        if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+            error("ERROR connecting");
+
+        // buffer message before send
+        bzero(buffer, 512);
+        message.copy(buffer, message.length());
+        std::cout.write(buffer, message.length());
+        std::cout.put('\n');
+
+        // write to socket
+        n = write(sockfd, buffer, strlen(buffer));
+        if (n < 0)
+            error("ERROR writing to socket");
+
+        close(sockfd);
+    }
+
+    void linkProcess(int processId, std::string jobId) {
+        std::string message = "{\"type\":\"Monitor\", \"state\":\"LinkProcess\", \"jobId\":\""+jobId+"\", \"processId\":\""+std::to_string(processId)+"\"}";
+        sendMonitorMessage(message);
+    }
+
+    void linkNode(std::string jobId) {
+        std::string message = "{\"type\":\"Monitor\", \"state\":\"LinkNode\", \"jobId\":\""+jobId+"\"}";
+        sendMonitorMessage(message);
+    }
+
+
+    void startMonitorProcess(int processId) {
+        std::string message = "{\"type\":\"Monitor\", \"state\":\"StartMonitorProcess\", \"processId\":\""+std::to_string(processId)+"\"}";
+        sendMonitorMessage(message);
+    }
+
+    void stopMonitorProcess(int processId) {
+        std::string message = "{\"type\":\"Monitor\", \"state\":\"StopMonitorProcess\", \"processId\":\""+std::to_string(processId)+"\"}";
+        sendMonitorMessage(message);
+    }
+
 }
 
 #endif

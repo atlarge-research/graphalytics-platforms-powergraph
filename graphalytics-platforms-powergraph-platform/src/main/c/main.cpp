@@ -25,6 +25,12 @@ int main(int argc, char **argv) {
     graphlab::command_line_options clopts("Breadth-first search algorithm");
 
 
+    string job_id;
+    clopts.attach_option("job-id", job_id,
+                         "The Id of the job.");
+//    clopts.add_positional("job-id");
+
+
     // PageRank specific options
     double pr_damping_factor = 0.85;
     clopts.attach_option("damping-factor", pr_damping_factor,
@@ -111,17 +117,17 @@ int main(int argc, char **argv) {
     };
 
     if (algorithm == "bfs") {
-        graphalytics::bfs::run(ctx, directed, traverse_source_vertex);
+        graphalytics::bfs::run(ctx, directed, traverse_source_vertex, job_id);
     } else if (algorithm == "conn") {
-        graphalytics::conn::run(ctx);
+        graphalytics::conn::run(ctx, job_id);
     } else if (algorithm == "pr") {
-        graphalytics::pr::run(ctx, directed, pr_damping_factor, max_iter);
+        graphalytics::pr::run(ctx, directed, pr_damping_factor, max_iter, job_id);
     } else if (algorithm == "cd") {
-        graphalytics::cd::run(ctx, max_iter);
+        graphalytics::cd::run(ctx, max_iter, job_id);
     } else if (algorithm == "lcc") {
-        graphalytics::lcc::run(ctx, directed);
+        graphalytics::lcc::run(ctx, directed, job_id);
     } else if (algorithm == "sssp") {
-        graphalytics::sssp::run(ctx, directed, traverse_source_vertex);
+        graphalytics::sssp::run(ctx, directed, traverse_source_vertex, job_id);
     } else {
         dc.cerr() << "Unknown algorithm specified: " << algorithm << endl;
         return EXIT_FAILURE;

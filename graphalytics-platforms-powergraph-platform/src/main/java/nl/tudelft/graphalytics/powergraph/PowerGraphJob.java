@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,17 +15,19 @@ import org.apache.logging.log4j.Logger;
 abstract public class PowerGraphJob {
 	private static final Logger LOG = LogManager.getLogger(PowerGraphJob.class);
 
+	private String jobId;
 	private String verticesPath;
 	private String edgesPath;
 	private boolean graphDirected;
 	private File outputFile;
 	private Configuration config;
 
-	public PowerGraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected) {
+	public PowerGraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId) {
 		this.config = config;
 		this.verticesPath = verticesPath;
 		this.edgesPath = edgesPath;
 		this.graphDirected = graphDirected;
+		this.jobId = jobId;
 	}
 
 	abstract protected void addJobArguments(List<String> args);
@@ -45,12 +48,9 @@ abstract public class PowerGraphJob {
 			args.add(outputFile.getAbsolutePath());
 		}
 
-		int numThreads = config.getInt("powergraph.num-threads", -1);
 
-		if (numThreads > 0) {
-			args.add("--ncpus");
-			args.add(String.valueOf(numThreads));
-		}
+		args.add("--job-id");
+		args.add(jobId);
 
 		String argsString = "";
 
@@ -65,6 +65,7 @@ abstract public class PowerGraphJob {
 
 		ProcessBuilder pb = new ProcessBuilder(cmd.split(" "));
 		pb.redirectErrorStream(true);
+
 
 		Process process = pb.start();
 		InputStreamReader isr = new InputStreamReader(process.getInputStream());
