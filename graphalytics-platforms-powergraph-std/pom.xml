@@ -3,13 +3,13 @@
 
 	<groupId>nl.tudelft.graphalytics</groupId>
 	<artifactId>graphalytics-platforms-powergraph-std</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>Graphalytics Platform PowerGraph - Standard Libraries</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<fastutil.version>7.0.10</fastutil.version>
-		<graphalytics.version>0.3-SNAPSHOT</graphalytics.version>
+		<graphalytics.version>0.3</graphalytics.version>
 		<log4j.version>2.5</log4j.version>
 	</properties>
 
