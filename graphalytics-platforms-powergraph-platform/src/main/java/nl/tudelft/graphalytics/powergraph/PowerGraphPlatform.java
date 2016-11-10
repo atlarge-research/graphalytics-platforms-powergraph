@@ -18,6 +18,7 @@ package nl.tudelft.graphalytics.powergraph;
 import java.io.File;
 import java.io.IOException;
 
+import nl.tudelft.graphalytics.BenchmarkMetrics;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -47,7 +48,7 @@ import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoeffi
  * @author Stijn Heldens
  */
 public class PowerGraphPlatform implements Platform {
-	private static final Logger LOG = LogManager.getLogger();
+	protected static final Logger LOG = LogManager.getLogger();
 
 	/**
 	 * File name for the file storing configuration options
@@ -78,10 +79,18 @@ public class PowerGraphPlatform implements Platform {
 		vertexFilePath = graph.getVertexFilePath();
 	}
 
+	private void setupGraphPath(Graph graph) {
+		graphDirected = graph.getGraphFormat().isDirected();
+		edgeFilePath = graph.getEdgeFilePath();
+		vertexFilePath = graph.getVertexFilePath();
+	}
+
 	@Override
 	public PlatformBenchmarkResult executeAlgorithmOnGraph(Benchmark benchmark) throws PlatformExecutionException {
 		PowerGraphJob job;
 		Object params = benchmark.getAlgorithmParameters();
+
+		setupGraphPath(benchmark.getGraph());
 
 		switch(benchmark.getAlgorithm()) {
 			case BFS:
@@ -129,6 +138,12 @@ public class PowerGraphPlatform implements Platform {
 	public void deleteGraph(String graphName) {
 		//
 	}
+
+	@Override
+	public BenchmarkMetrics retrieveMetrics() {
+		return new BenchmarkMetrics();
+	}
+
 
 	@Override
 	public String getName() {
