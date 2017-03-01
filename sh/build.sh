@@ -27,13 +27,13 @@ module list
 POWERGRAPH_HOME=/var/scratch/wlngai/graphalytics/app/powergraph/src/
 
 mkdir -p bin/standard
-(cd bin/standard && cmake -DCMAKE_BUILD_TYPE=Release ../../src -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=1 -DNO_MPI=0 && make all)
+(cd bin/standard && cmake -DCMAKE_BUILD_TYPE=Release ../../src/main/c -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=1 -DNO_MPI=0 && make all)
 
 mkdir -p bin/granula
-(cd bin/granula && cmake -DCMAKE_BUILD_TYPE=Release -DGRANULA=1 ../../src -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=1 -DNO_MPI=0 && make all)
+(cd bin/granula && cmake -DCMAKE_BUILD_TYPE=Release -DGRANULA=1 ../../src/main/c -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=1 -DNO_MPI=0 && make all)
 
 rm -f bin/*/CMakeCache.txt
-sed -i '48,61d' prepare-benchmark.sh 
+sed -i '48,61d' sh/prepare-benchmark.sh 
 
 }
 

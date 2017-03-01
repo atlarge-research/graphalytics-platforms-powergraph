@@ -53,7 +53,11 @@
 			<outputDirectory>lib</outputDirectory>
 			<destName>${project.artifactId}-${project.version}-default.jar</destName>
 		</file>
+		<file><!--Graphalytics platform driver JAR with Granula-->
+			<source>${project.basedir}/target/${project.artifactId}-${project.version}-granula.jar</source>
+			<outputDirectory>lib</outputDirectory>
+			<destName>${project.artifactId}-${project.version}-granula.jar</destName>
+		</file>
 	</files>
-
 
 </assembly>
