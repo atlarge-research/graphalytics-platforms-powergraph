@@ -1,4 +1,4 @@
-package nl.tudelft.graphalytics.powergraph.algorithms.cd;
+package nl.tudelft.graphalytics.powergraph.algorithms.cdlp;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class CommunityDetectionJob extends PowergraphJob {
 
 	@Override
 	protected void addJobArguments(List<String> args) {
-		args.add("cd");
+		args.add("cdlp");
 		args.add("--max-iterations");
 		args.add(Integer.toString(params.getMaxIterations()));
 	}

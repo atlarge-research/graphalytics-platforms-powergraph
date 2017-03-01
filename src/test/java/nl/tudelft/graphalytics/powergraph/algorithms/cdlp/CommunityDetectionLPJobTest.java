@@ -19,7 +19,6 @@ import java.io.File;
 
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.powergraph.Utils;
-import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
 import nl.tudelft.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPOutput;
 import nl.tudelft.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPValidationTest;

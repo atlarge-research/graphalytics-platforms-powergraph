@@ -33,14 +33,14 @@ namespace graphalytics {
                 std::string job_id);
     }
 
-    namespace cd {
+    namespace cdlp {
         void run(
                 context_t &ctx,
                 int max_iter,
                 std::string job_id);
     }
 
-    namespace conn {
+    namespace wcc {
         void run(
                 context_t &ctx,
                 std::string job_id);

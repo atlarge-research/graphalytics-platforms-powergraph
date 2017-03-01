@@ -9,8 +9,8 @@
 // this once.
 #include "bfs.cpp"
 #include "pr.cpp"
-#include "cd.cpp"
-#include "conn.cpp"
+#include "cdlp.cpp"
+#include "wcc.cpp"
 #include "lcc.cpp"
 #include "sssp.cpp"
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 
     string algorithm = "";
     clopts.attach_option("algorithm", algorithm,
-            "Algorithm to use (bfs/pr/conn/cd/lcc/sssp)");
+            "Algorithm to use (bfs/pr/wcc/cdlp/lcc/sssp)");
     clopts.add_positional("algorithm");
 
     int max_iter = 10;
@@ -118,12 +118,12 @@ int main(int argc, char **argv) {
 
     if (algorithm == "bfs") {
         graphalytics::bfs::run(ctx, directed, traverse_source_vertex, job_id);
-    } else if (algorithm == "conn") {
-        graphalytics::conn::run(ctx, job_id);
+    } else if (algorithm == "wcc") {
+        graphalytics::wcc::run(ctx, job_id);
     } else if (algorithm == "pr") {
         graphalytics::pr::run(ctx, directed, pr_damping_factor, max_iter, job_id);
-    } else if (algorithm == "cd") {
-        graphalytics::cd::run(ctx, max_iter, job_id);
+    } else if (algorithm == "cdlp") {
+        graphalytics::cdlp::run(ctx, max_iter, job_id);
     } else if (algorithm == "lcc") {
         graphalytics::lcc::run(ctx, directed, job_id);
     } else if (algorithm == "sssp") {

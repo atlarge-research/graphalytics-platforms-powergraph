@@ -1,4 +1,4 @@
-package nl.tudelft.graphalytics.powergraph.algorithms.conn;
+package nl.tudelft.graphalytics.powergraph.algorithms.wcc;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public class ConnectedComponentsJob extends PowergraphJob {
 
 	@Override
 	protected void addJobArguments(List<String> args) {
-		args.add("conn");
+		args.add("wcc");
 	}
 }

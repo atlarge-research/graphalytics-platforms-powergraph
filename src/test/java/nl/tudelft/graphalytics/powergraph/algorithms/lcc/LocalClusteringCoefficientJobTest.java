@@ -18,9 +18,7 @@ package nl.tudelft.graphalytics.powergraph.algorithms.lcc;
 import java.io.File;
 
 import nl.tudelft.graphalytics.powergraph.Utils;
-import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
-import nl.tudelft.graphalytics.validation.algorithms.pr.PageRankOutput;
 import nl.tudelft.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientOutput;
 import nl.tudelft.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientValidationTest;
 

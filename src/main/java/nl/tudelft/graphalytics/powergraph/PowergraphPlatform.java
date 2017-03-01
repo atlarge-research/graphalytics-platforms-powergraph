@@ -39,11 +39,11 @@ import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
 import nl.tudelft.graphalytics.domain.algorithms.SingleSourceShortestPathsParameters;
 import nl.tudelft.graphalytics.powergraph.algorithms.bfs.BreadthFirstSearchJob;
-import nl.tudelft.graphalytics.powergraph.algorithms.cd.CommunityDetectionJob;
-import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.cdlp.CommunityDetectionJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.wcc.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.pr.PageRankJob;
 import nl.tudelft.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathsJob;
-import nl.tudelft.graphalytics.powergraph.algorithms.stats.LocalClusteringCoefficientJob;
+import nl.tudelft.graphalytics.powergraph.algorithms.lcc.LocalClusteringCoefficientJob;
 import org.json.simple.JSONObject;
 
 /**

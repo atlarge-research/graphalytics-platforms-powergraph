@@ -1,4 +1,4 @@
-package nl.tudelft.graphalytics.powergraph.algorithms.stats;
+package nl.tudelft.graphalytics.powergraph.algorithms.lcc;
 
 import java.util.List;
 

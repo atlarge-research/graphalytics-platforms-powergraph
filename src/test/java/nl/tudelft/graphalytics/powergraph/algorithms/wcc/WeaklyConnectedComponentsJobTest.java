@@ -18,7 +18,6 @@ package nl.tudelft.graphalytics.powergraph.algorithms.wcc;
 import java.io.File;
 
 import nl.tudelft.graphalytics.powergraph.Utils;
-import nl.tudelft.graphalytics.powergraph.algorithms.conn.ConnectedComponentsJob;
 import nl.tudelft.graphalytics.validation.GraphStructure;
 import nl.tudelft.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsOutput;
 import nl.tudelft.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsValidationTest;
