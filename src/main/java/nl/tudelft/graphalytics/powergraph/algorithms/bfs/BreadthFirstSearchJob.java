@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
-import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
+import nl.tudelft.graphalytics.powergraph.PowergraphJob;
 
-public class BreadthFirstSearchJob extends PowerGraphJob {
+public class BreadthFirstSearchJob extends PowergraphJob {
 	
 	BreadthFirstSearchParameters params;
 

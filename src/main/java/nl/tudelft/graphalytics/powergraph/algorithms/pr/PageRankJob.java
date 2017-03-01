@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
-import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
+import nl.tudelft.graphalytics.powergraph.PowergraphJob;
 
-public class PageRankJob extends PowerGraphJob {
+public class PageRankJob extends PowergraphJob {
 	PageRankParameters params;
 
 	public PageRankJob(Configuration config, String verticesPath, String edgesPath,

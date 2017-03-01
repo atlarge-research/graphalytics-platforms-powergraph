@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +11,8 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-abstract public class PowerGraphJob {
-	private static final Logger LOG = LogManager.getLogger(PowerGraphJob.class);
+abstract public class PowergraphJob {
+	private static final Logger LOG = LogManager.getLogger(PowergraphJob.class);
 
 	private String jobId;
 	private String verticesPath;
@@ -22,7 +21,7 @@ abstract public class PowerGraphJob {
 	private File outputFile;
 	private Configuration config;
 
-	public PowerGraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId) {
+	public PowergraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId) {
 		this.config = config;
 		this.verticesPath = verticesPath;
 		this.edgesPath = edgesPath;
@@ -59,7 +58,7 @@ abstract public class PowerGraphJob {
 		}
 
 		String cmdFormat = config.getString("powergraph.command", "%s %s");
-		String cmd = String.format(cmdFormat,"./" + PowerGraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
+		String cmd = String.format(cmdFormat,"./" + PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
 
 		LOG.info("executing command: " + cmd);
 

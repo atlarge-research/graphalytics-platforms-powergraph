@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,9 +65,9 @@ public class Utils {
 	
 	public static Configuration loadConfiguration() {
 		try {
-			return new PropertiesConfiguration(PowerGraphPlatform.POWERGRAPH_PROPERTIES_FILE);
+			return new PropertiesConfiguration(PowergraphPlatform.POWERGRAPH_PROPERTIES_FILE);
 		} catch(ConfigurationException e) {
-			LOG.warn("failed to load " + PowerGraphPlatform.POWERGRAPH_PROPERTIES_FILE, e);
+			LOG.warn("failed to load " + PowergraphPlatform.POWERGRAPH_PROPERTIES_FILE, e);
 			return new PropertiesConfiguration();
 		}
 	}

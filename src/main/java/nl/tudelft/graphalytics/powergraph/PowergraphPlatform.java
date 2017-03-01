@@ -33,7 +33,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import nl.tudelft.graphalytics.Platform;
 import nl.tudelft.graphalytics.PlatformExecutionException;
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
@@ -52,7 +51,7 @@ import org.json.simple.JSONObject;
  *
  * @author Stijn Heldens
  */
-public class PowerGraphPlatform implements GranulaAwarePlatform {
+public class PowergraphPlatform implements GranulaAwarePlatform {
 	protected static final Logger LOG = LogManager.getLogger();
 
 	/**
@@ -67,7 +66,7 @@ public class PowerGraphPlatform implements GranulaAwarePlatform {
 	private String vertexFilePath;
 	private Configuration config;
 
-	public PowerGraphPlatform() {
+	public PowergraphPlatform() {
 		try {
 			config = new PropertiesConfiguration(POWERGRAPH_PROPERTIES_FILE);
 		} catch(ConfigurationException e) {
@@ -92,7 +91,7 @@ public class PowerGraphPlatform implements GranulaAwarePlatform {
 
 	@Override
 	public PlatformBenchmarkResult executeAlgorithmOnGraph(Benchmark benchmark) throws PlatformExecutionException {
-		PowerGraphJob job;
+		PowergraphJob job;
 		Object params = benchmark.getAlgorithmParameters();
 
 		setupGraphPath(benchmark.getGraph());

@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
-import nl.tudelft.graphalytics.powergraph.PowerGraphJob;
+import nl.tudelft.graphalytics.powergraph.PowergraphJob;
 
-public class CommunityDetectionJob extends PowerGraphJob {
+public class CommunityDetectionJob extends PowergraphJob {
 	private CommunityDetectionLPParameters params;
 	
 	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
