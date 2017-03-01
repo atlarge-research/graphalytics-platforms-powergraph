@@ -196,7 +196,7 @@
 							<descriptors>
 								<descriptor>src/main/assembly/bin.xml</descriptor>
 							</descriptors>
-							<finalName>graphalytics-${graphalytics.version}-powergraph-${project.version}</finalName>
+							<finalName>graphalytics-${graphalytics.version}-${platform.name}-${project.version}</finalName>
 							<tarLongFileMode>posix</tarLongFileMode>
 							<outputDirectory>${project.basedir}</outputDirectory>
 						</configuration>
