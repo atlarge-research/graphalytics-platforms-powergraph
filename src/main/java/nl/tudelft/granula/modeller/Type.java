@@ -35,5 +35,7 @@ public class Type extends BasicType {
     public static String Bsp = "Bsp";
     public static String Superstep = "Superstep";
 
+    public static String Cleanup = "Cleanup";
+    public static String Startup = "Startup";
 
 }

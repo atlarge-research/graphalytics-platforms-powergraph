@@ -17,6 +17,7 @@
 package nl.tudelft.granula.modeller.platform.operation;
 
 import nl.tudelft.granula.modeller.Type;
+import nl.tudelft.granula.modeller.rule.derivation.ColorDerivation;
 import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
 import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
 import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
@@ -41,6 +42,7 @@ public class ProcessGraph extends RealtimeOperationModel {
         addVisualDerivation(new TableVisualization(1, "MainInfo",
                 new ArrayList<String>() {{
                 }}));
+        addInfoDerivation(new ColorDerivation(11, "#3cf"));
     }
 
 }

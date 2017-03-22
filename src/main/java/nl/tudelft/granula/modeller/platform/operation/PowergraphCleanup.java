@@ -18,32 +18,34 @@ package nl.tudelft.granula.modeller.platform.operation;
 
 import nl.tudelft.granula.modeller.Type;
 import nl.tudelft.granula.modeller.rule.derivation.ColorDerivation;
+import nl.tudelft.granula.modeller.rule.derivation.FilialCompletenessDerivation;
 import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import nl.tudelft.granula.modeller.rule.derivation.time.DurationDerivation;
+import nl.tudelft.granula.modeller.rule.derivation.time.JobEndTimeDerivation;
+import nl.tudelft.granula.modeller.rule.derivation.time.SiblingStartTimeDerivation;
 import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
-import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
 
-import java.util.ArrayList;
+public class PowergraphCleanup extends AbstractOperationModel {
 
-public class OffloadGraph extends RealtimeOperationModel {
-
-    public OffloadGraph() {
-        super(Type.PowerGraph, Type.OffloadGraph);
+    public PowergraphCleanup() {
+        super(Type.PowerGraph, Type.Cleanup);
     }
 
     public void loadRules() {
         super.loadRules();
-
         addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
 
-        String summary = "OffloadGraph.";
+        addInfoDerivation(new SiblingStartTimeDerivation(5, Type.PowerGraph, Type.OffloadGraph));
+
+        addInfoDerivation(new JobEndTimeDerivation(1));
+        addInfoDerivation(new DurationDerivation(6));
+        this.addInfoDerivation(new FilialCompletenessDerivation(2));
+
+        String summary = "Prepare.";
         addInfoDerivation(new SimpleSummaryDerivation(11, summary));
 
-        addVisualDerivation(new TableVisualization(1, "MainInfo",
-                new ArrayList<String>() {{
-                }}));
-
-        addInfoDerivation(new ColorDerivation(11, "#393"));
+        addInfoDerivation(new ColorDerivation(11, "#666"));
     }
 
-
 }
+

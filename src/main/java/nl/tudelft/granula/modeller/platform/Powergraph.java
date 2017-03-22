@@ -40,12 +40,17 @@ public class Powergraph extends PlatformModel {
         addOperationModel(new OffloadGraph());
         addOperationModel(new ProcessGraph());
         addOperationModel(new BspSuperstep());
+        addOperationModel(new PowergraphCleanup());
+        addOperationModel(new PowergraphStartup());
     }
 
     public void loadRules() {
 
         addFillingRule(new UniqueOperationFilling(2, Type.PowerGraph, Type.Job));
 
+        addFillingRule(new UniqueOperationFilling(2, Type.PowerGraph, Type.Startup));
+
+        addFillingRule(new UniqueOperationFilling(2, Type.PowerGraph, Type.Cleanup));
         addInfoDerivation(new JobNameDerivationRule(4));
         addInfoDerivation(new JobInfoRule(20));
         addExtraction(new PowergraphExtractionRule(1));
