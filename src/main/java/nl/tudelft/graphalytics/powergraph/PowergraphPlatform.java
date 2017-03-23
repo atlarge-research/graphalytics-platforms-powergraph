@@ -20,20 +20,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import nl.tudelft.granula.archiver.PlatformArchive;
 import nl.tudelft.granula.modeller.job.JobModel;
 import nl.tudelft.granula.modeller.platform.Powergraph;
-import nl.tudelft.graphalytics.BenchmarkMetrics;
-import nl.tudelft.graphalytics.domain.*;
+import nl.tudelft.graphalytics.report.result.BenchmarkMetrics;
+import nl.tudelft.graphalytics.report.result.BenchmarkResult;
+import nl.tudelft.graphalytics.domain.benchmark.BenchmarkRun;
+import nl.tudelft.graphalytics.domain.graph.Graph;
 import nl.tudelft.graphalytics.granula.GranulaAwarePlatform;
+import nl.tudelft.graphalytics.report.result.PlatformBenchmarkResult;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import nl.tudelft.graphalytics.PlatformExecutionException;
+import nl.tudelft.graphalytics.execution.PlatformExecutionException;
 import nl.tudelft.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import nl.tudelft.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import nl.tudelft.graphalytics.domain.algorithms.PageRankParameters;
@@ -78,55 +82,56 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 	@Override
 	public void uploadGraph(Graph graph) throws Exception {
-		graphDirected = graph.getGraphFormat().isDirected();
+		graphDirected = graph.isDirected();
 		edgeFilePath = graph.getEdgeFilePath();
 		vertexFilePath = graph.getVertexFilePath();
 	}
 
 	private void setupGraphPath(Graph graph) {
-		graphDirected = graph.getGraphFormat().isDirected();
+		graphDirected = graph.isDirected();
 		edgeFilePath = graph.getEdgeFilePath();
 		vertexFilePath = graph.getVertexFilePath();
 	}
 
 	@Override
-	public PlatformBenchmarkResult executeAlgorithmOnGraph(Benchmark benchmark) throws PlatformExecutionException {
+	public PlatformBenchmarkResult execute(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
 		PowergraphJob job;
-		Object params = benchmark.getAlgorithmParameters();
+		Object params = benchmarkRun.getAlgorithmParameters();
 
-		setupGraphPath(benchmark.getGraph());
+		setupGraphPath(benchmarkRun.getGraph());
 
-		switch(benchmark.getAlgorithm()) {
+		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
 				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (BreadthFirstSearchParameters) params, benchmark.getId());
+						graphDirected, (BreadthFirstSearchParameters) params, benchmarkRun.getId());
 				break;
 			case WCC:
 				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, benchmark.getId());
+						graphDirected, benchmarkRun.getId());
 				break;
 			case LCC:
 				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, benchmark.getId());
+						graphDirected, benchmarkRun.getId());
 				break;
 			case CDLP:
 				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (CommunityDetectionLPParameters) params, benchmark.getId());
+						graphDirected, (CommunityDetectionLPParameters) params, benchmarkRun.getId());
 				break;
 			case PR:
 				job = new PageRankJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (PageRankParameters) params, benchmark.getId());
+						graphDirected, (PageRankParameters) params, benchmarkRun.getId());
 				break;
 			case SSSP:
 				job = new SingleSourceShortestPathsJob(config, vertexFilePath, edgeFilePath,
-						graphDirected, (SingleSourceShortestPathsParameters) params, benchmark.getId());
+						graphDirected, (SingleSourceShortestPathsParameters) params, benchmarkRun.getId());
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");
 		}
 
-		if (benchmark.isOutputRequired()) {
-			job.setOutputFile(new File(benchmark.getOutputPath()));
+		if (benchmarkRun.isOutputRequired()) {
+			Path outputFile = benchmarkRun.getOutputDir().resolve(benchmarkRun.getName());
+			job.setOutputFile(outputFile.toFile());
 		}
 
 		try {
@@ -135,7 +140,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 			throw new PlatformExecutionException("failed to execute command", e);
 		}
 
-		return new PlatformBenchmarkResult(NestedConfiguration.empty());
+		return new PlatformBenchmarkResult();
 	}
 
 	@Override
@@ -144,30 +149,33 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public BenchmarkMetrics retrieveMetrics() {
+	public BenchmarkMetrics extractMetrics() {
 		return new BenchmarkMetrics();
 	}
 
 
 	@Override
-	public String getName() {
+	public String getPlatformName() {
 		return "powergraph";
 	}
 
 	@Override
-	public NestedConfiguration getPlatformConfiguration() {
-		return NestedConfiguration.empty();
-	}
+	public void prepare(BenchmarkRun benchmarkRun) {
 
-
-
-	@Override
-	public void preBenchmark(Benchmark benchmark, Path logDirectory) {
-		startPlatformLogging(logDirectory.resolve("platform").resolve("driver.logs"));
 	}
 
 	@Override
-	public void postBenchmark(Benchmark benchmark, Path logDirectory) {
+	public void preprocess(BenchmarkRun benchmarkRun) {
+		startPlatformLogging(benchmarkRun.getLogDir().resolve("platform").resolve("driver.logs"));
+	}
+
+	@Override
+	public void cleanup(BenchmarkRun benchmarkRun) {
+
+	}
+
+	@Override
+	public void postprocess(BenchmarkRun benchmarkRun) {
 		stopPlatformLogging();
 	}
 
