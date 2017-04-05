@@ -24,10 +24,10 @@ import java.nio.file.Path;
 import nl.tudelft.granula.archiver.PlatformArchive;
 import nl.tudelft.granula.modeller.job.JobModel;
 import nl.tudelft.granula.modeller.platform.Powergraph;
+import science.atlarge.graphalytics.domain.graph.FormattedGraph;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
 import science.atlarge.graphalytics.report.result.BenchmarkResult;
 import science.atlarge.graphalytics.domain.benchmark.BenchmarkRun;
-import science.atlarge.graphalytics.domain.graph.Graph;
 import science.atlarge.graphalytics.granula.GranulaAwarePlatform;
 import science.atlarge.graphalytics.report.result.PlatformBenchmarkResult;
 import org.apache.commons.configuration.Configuration;
@@ -80,24 +80,24 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void uploadGraph(Graph graph) throws Exception {
-		graphDirected = graph.isDirected();
-		edgeFilePath = graph.getEdgeFilePath();
-		vertexFilePath = graph.getVertexFilePath();
+	public void uploadGraph(FormattedGraph formattedGraph) throws Exception {
+		graphDirected = formattedGraph.isDirected();
+		edgeFilePath = formattedGraph.getEdgeFilePath();
+		vertexFilePath = formattedGraph.getVertexFilePath();
 	}
 
-	private void setupGraphPath(Graph graph) {
-		graphDirected = graph.isDirected();
-		edgeFilePath = graph.getEdgeFilePath();
-		vertexFilePath = graph.getVertexFilePath();
+	private void setupGraphPath(FormattedGraph formattedGraph) {
+		graphDirected = formattedGraph.isDirected();
+		edgeFilePath = formattedGraph.getEdgeFilePath();
+		vertexFilePath = formattedGraph.getVertexFilePath();
 	}
 
 	@Override
-	public PlatformBenchmarkResult execute(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
+	public boolean execute(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
 		PowergraphJob job;
 		Object params = benchmarkRun.getAlgorithmParameters();
 
-		setupGraphPath(benchmarkRun.getGraph());
+		setupGraphPath(benchmarkRun.getFormattedGraph());
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
@@ -139,18 +139,14 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 			throw new PlatformExecutionException("failed to execute command", e);
 		}
 
-		return new PlatformBenchmarkResult();
+		return true;
 	}
 
 	@Override
-	public void deleteGraph(String graphName) {
+	public void deleteGraph(FormattedGraph formattedGraph) {
 		//
 	}
 
-	@Override
-	public BenchmarkMetrics extractMetrics() {
-		return new BenchmarkMetrics();
-	}
 
 
 	@Override
