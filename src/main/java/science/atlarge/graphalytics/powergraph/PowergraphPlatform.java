@@ -25,6 +25,8 @@ import nl.tudelft.granula.archiver.PlatformArchive;
 import nl.tudelft.granula.modeller.job.JobModel;
 import nl.tudelft.granula.modeller.platform.Powergraph;
 import org.apache.commons.io.output.TeeOutputStream;
+import science.atlarge.graphalytics.configuration.ConfigurationUtil;
+import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
 import science.atlarge.graphalytics.report.result.BenchmarkResult;
@@ -82,10 +84,10 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 		Configuration benchmarkConfig;
 		Configuration granulaConfig;
 		try {
-			platfomConfig = new PropertiesConfiguration(PLATFORM_PROPERTIES_FILE);
-			benchmarkConfig = new PropertiesConfiguration(BENCHMARK_PROPERTIES_FILE);
-			granulaConfig = new PropertiesConfiguration(GRANULA_PROPERTIES_FILE);
-		} catch(ConfigurationException e) {
+			platfomConfig = ConfigurationUtil.loadConfiguration(PLATFORM_PROPERTIES_FILE);
+			benchmarkConfig = ConfigurationUtil.loadConfiguration(BENCHMARK_PROPERTIES_FILE);
+			granulaConfig = ConfigurationUtil.loadConfiguration(GRANULA_PROPERTIES_FILE);
+		} catch(InvalidConfigurationException e) {
 			LOG.warn("failed to load " + PLATFORM_PROPERTIES_FILE, e);
 			LOG.warn("failed to load " + BENCHMARK_PROPERTIES_FILE, e);
 			LOG.warn("Could not find or load \"{}\"", GRANULA_PROPERTIES_FILE);
