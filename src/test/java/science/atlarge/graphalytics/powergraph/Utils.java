@@ -65,9 +65,9 @@ public class Utils {
 	
 	public static Configuration loadConfiguration() {
 		try {
-			return new PropertiesConfiguration(PowergraphPlatform.PLATFORM_PROPERTIES_FILE);
+			return new PropertiesConfiguration(PowergraphPlatform.BENCHMARK_PROPERTIES_FILE);
 		} catch(ConfigurationException e) {
-			LOG.warn("failed to load " + PowergraphPlatform.PLATFORM_PROPERTIES_FILE, e);
+			LOG.warn("failed to load " + PowergraphPlatform.BENCHMARK_PROPERTIES_FILE, e);
 			return new PropertiesConfiguration();
 		}
 	}

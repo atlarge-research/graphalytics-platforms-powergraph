@@ -64,8 +64,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 
 	public static final String PLATFORM_NAME = "powergraph";
-	private static final String BENCHMARK_PROPERTIES_FILE = "benchmark.properties";
-	public static final String PLATFORM_PROPERTIES_FILE = PLATFORM_NAME + ".properties";
+	public static final String BENCHMARK_PROPERTIES_FILE = "benchmark.properties";
 	private static final String GRANULA_PROPERTIES_FILE = "granula.properties";
 
 	public static final String GRANULA_ENABLE_KEY = "benchmark.run.granula.enabled";
@@ -74,23 +73,19 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	private boolean graphDirected;
 	private String edgeFilePath;
 	private String vertexFilePath;
-	private Configuration platfomConfig;
+	private Configuration benchmarkConfig;
 	private static PrintStream sysOut;
 	private static PrintStream sysErr;
 
 	public PowergraphPlatform() {
 
-		Configuration benchmarkConfig;
 		Configuration granulaConfig;
 		try {
-			platfomConfig = ConfigurationUtil.loadConfiguration(PLATFORM_PROPERTIES_FILE);
 			benchmarkConfig = ConfigurationUtil.loadConfiguration(BENCHMARK_PROPERTIES_FILE);
 			granulaConfig = ConfigurationUtil.loadConfiguration(GRANULA_PROPERTIES_FILE);
 		} catch(InvalidConfigurationException e) {
-			LOG.warn("failed to load " + PLATFORM_PROPERTIES_FILE, e);
 			LOG.warn("failed to load " + BENCHMARK_PROPERTIES_FILE, e);
 			LOG.warn("Could not find or load \"{}\"", GRANULA_PROPERTIES_FILE);
-			platfomConfig = new PropertiesConfiguration();
 			benchmarkConfig = new PropertiesConfiguration();
 			granulaConfig = new PropertiesConfiguration();
 		}
@@ -121,27 +116,27 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
-				job = new BreadthFirstSearchJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new BreadthFirstSearchJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (BreadthFirstSearchParameters) params, benchmarkRun.getId());
 				break;
 			case WCC:
-				job = new ConnectedComponentsJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new ConnectedComponentsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, benchmarkRun.getId());
 				break;
 			case LCC:
-				job = new LocalClusteringCoefficientJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new LocalClusteringCoefficientJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, benchmarkRun.getId());
 				break;
 			case CDLP:
-				job = new CommunityDetectionJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new CommunityDetectionJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (CommunityDetectionLPParameters) params, benchmarkRun.getId());
 				break;
 			case PR:
-				job = new PageRankJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new PageRankJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (PageRankParameters) params, benchmarkRun.getId());
 				break;
 			case SSSP:
-				job = new SingleSourceShortestPathsJob(platfomConfig, vertexFilePath, edgeFilePath,
+				job = new SingleSourceShortestPathsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (SingleSourceShortestPathsParameters) params, benchmarkRun.getId());
 				break;
 			default:

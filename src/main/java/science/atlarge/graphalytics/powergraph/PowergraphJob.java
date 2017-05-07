@@ -57,7 +57,7 @@ abstract public class PowergraphJob {
 			argsString += arg += " ";
 		}
 
-		String cmdFormat = config.getString("powergraph.command", "%s %s");
+		String cmdFormat = config.getString("platform.powergraph.command", "%s %s");
 		String cmd = String.format(cmdFormat,"./" + PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
 
 		LOG.info("executing command: " + cmd);
