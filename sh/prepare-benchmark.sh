@@ -18,7 +18,7 @@
 export platform="powergraph"
 
 # Set Library jar
-export LIBRARY_JAR=`ls lib/graphalytics-*std*.jar`
+export LIBRARY_JAR=`ls lib/graphalytics-*default*.jar`
 GRANULA_ENABLED=$(grep -E "^benchmark.run.granula.enabled[	 ]*[:=]" $config/granula.properties | sed 's/benchmark.run.granula.enabled[\t ]*[:=][\t ]*\([^\t ]*\).*/\1/g' | head -n 1)
 if [ "$GRANULA_ENABLED" = "true" ] ; then
  if ! find lib -name "graphalytics-*granula*.jar" | grep -q '.'; then
@@ -28,19 +28,26 @@ if [ "$GRANULA_ENABLED" = "true" ] ; then
  fi
 fi
 
+# Ensure the configuration file exists
+if [ ! -f "$config/platform.properties" ]; then
+	echo "Missing mandatory configuration file: $config/platform.properties" >&2
+	exit 1
+fi
+
+
 # Build binaries
 if [ -z $POWERGRAPH_HOME ]; then
-    POWERGRAPH_HOME=`awk -F' *= *' '{ if ($1 == "powergraph.home") print $2 }' $config/powergraph.properties`
+    POWERGRAPH_HOME=`awk -F' *= *' '{ if ($1 == "platform.powergraph.home") print $2 }' $config/platform.properties`
 fi
 
 if [ -z $POWERGRAPH_HOME ]; then
     echo "Error: home directory for PowerGraph not specified."
-    echo "Define the environment variable \$POWERGRAPH_HOME or modify powergraph.home in $config/powergraph.properties"
+    echo "Define the environment variable \$POWERGRAPH_HOME or modify platform.powergraph.home in $config/platform.properties"
     exit 1
 fi
 
 if [ -z $DISABLE_MPI ]; then
-    DISABLE_MPI=`awk -F' *= *' '{ if ($1 == "powergraph.disable_mpi") print $2 }' $config/powergraph.properties`
+    DISABLE_MPI=`awk -F' *= *' '{ if ($1 == "platform.powergraph.disable_mpi") print $2 }' $config/platform.properties`
 fi
 
 DISABLE_JVM=1

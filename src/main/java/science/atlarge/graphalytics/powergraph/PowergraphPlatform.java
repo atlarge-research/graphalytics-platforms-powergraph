@@ -24,14 +24,15 @@ import java.nio.file.Path;
 import nl.tudelft.granula.archiver.PlatformArchive;
 import nl.tudelft.granula.modeller.job.JobModel;
 import nl.tudelft.granula.modeller.platform.Powergraph;
+import org.apache.commons.io.output.TeeOutputStream;
+import science.atlarge.graphalytics.configuration.ConfigurationUtil;
+import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
-import science.atlarge.graphalytics.report.result.BenchmarkResult;
+import science.atlarge.graphalytics.report.result.BenchmarkRunResult;
 import science.atlarge.graphalytics.domain.benchmark.BenchmarkRun;
 import science.atlarge.graphalytics.granula.GranulaAwarePlatform;
-import science.atlarge.graphalytics.report.result.PlatformBenchmarkResult;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,23 +61,37 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	/**
 	 * File name for the file storing configuration options
 	 */
-	public static final String POWERGRAPH_PROPERTIES_FILE = "powergraph.properties";
 
+
+	public static final String PLATFORM_NAME = "powergraph";
+	public static final String BENCHMARK_PROPERTIES_FILE = "benchmark.properties";
+	private static final String GRANULA_PROPERTIES_FILE = "granula.properties";
+
+	public static final String GRANULA_ENABLE_KEY = "benchmark.run.granula.enabled";
 	public static String POWERGRAPH_BINARY_NAME = "bin/standard/main";
 
 	private boolean graphDirected;
 	private String edgeFilePath;
 	private String vertexFilePath;
-	private Configuration config;
+	private Configuration benchmarkConfig;
+	private static PrintStream sysOut;
+	private static PrintStream sysErr;
 
 	public PowergraphPlatform() {
+
+		Configuration granulaConfig;
 		try {
-			config = new PropertiesConfiguration(POWERGRAPH_PROPERTIES_FILE);
-		} catch(ConfigurationException e) {
-			LOG.warn("failed to load " + POWERGRAPH_PROPERTIES_FILE, e);
-			config = new PropertiesConfiguration();
+			benchmarkConfig = ConfigurationUtil.loadConfiguration(BENCHMARK_PROPERTIES_FILE);
+			granulaConfig = ConfigurationUtil.loadConfiguration(GRANULA_PROPERTIES_FILE);
+		} catch(InvalidConfigurationException e) {
+			LOG.warn("failed to load " + BENCHMARK_PROPERTIES_FILE, e);
+			LOG.warn("Could not find or load \"{}\"", GRANULA_PROPERTIES_FILE);
+			benchmarkConfig = new PropertiesConfiguration();
+			granulaConfig = new PropertiesConfiguration();
 		}
-		POWERGRAPH_BINARY_NAME = "./bin/granula/main";
+
+		boolean granulaEnabled = granulaConfig.getBoolean(GRANULA_ENABLE_KEY, false);
+		POWERGRAPH_BINARY_NAME = granulaEnabled ? "./bin/granula/main": POWERGRAPH_BINARY_NAME;
 	}
 
 	@Override
@@ -101,27 +116,27 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
-				job = new BreadthFirstSearchJob(config, vertexFilePath, edgeFilePath,
+				job = new BreadthFirstSearchJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (BreadthFirstSearchParameters) params, benchmarkRun.getId());
 				break;
 			case WCC:
-				job = new ConnectedComponentsJob(config, vertexFilePath, edgeFilePath,
+				job = new ConnectedComponentsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, benchmarkRun.getId());
 				break;
 			case LCC:
-				job = new LocalClusteringCoefficientJob(config, vertexFilePath, edgeFilePath,
+				job = new LocalClusteringCoefficientJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, benchmarkRun.getId());
 				break;
 			case CDLP:
-				job = new CommunityDetectionJob(config, vertexFilePath, edgeFilePath,
+				job = new CommunityDetectionJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (CommunityDetectionLPParameters) params, benchmarkRun.getId());
 				break;
 			case PR:
-				job = new PageRankJob(config, vertexFilePath, edgeFilePath,
+				job = new PageRankJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (PageRankParameters) params, benchmarkRun.getId());
 				break;
 			case SSSP:
-				job = new SingleSourceShortestPathsJob(config, vertexFilePath, edgeFilePath,
+				job = new SingleSourceShortestPathsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
 						graphDirected, (SingleSourceShortestPathsParameters) params, benchmarkRun.getId());
 				break;
 			default:
@@ -170,8 +185,9 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void postprocess(BenchmarkRun benchmarkRun) {
+	public BenchmarkMetrics postprocess(BenchmarkRun benchmarkRun) {
 		stopPlatformLogging();
+		return new BenchmarkMetrics();
 	}
 
 	@Override
@@ -180,18 +196,19 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 
-	private static PrintStream console;
-
 	public static void startPlatformLogging(Path fileName) {
-		console = System.out;
+		sysOut = System.out;
+		sysErr = System.err;
 		try {
 			File file = null;
 			file = fileName.toFile();
 			file.getParentFile().mkdirs();
 			file.createNewFile();
 			FileOutputStream fos = new FileOutputStream(file);
-			PrintStream ps = new PrintStream(fos);
+			TeeOutputStream bothStream =new TeeOutputStream(System.out, fos);
+			PrintStream ps = new PrintStream(bothStream);
 			System.setOut(ps);
+			System.setErr(ps);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("cannot redirect to output file");
@@ -201,17 +218,18 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 	public static void stopPlatformLogging() {
 		System.out.println("EndTime: " + System.currentTimeMillis());
-		System.setOut(console);
+		System.setOut(sysOut);
+		System.setErr(sysErr);
 	}
 
 
 	@Override
-	public void enrichMetrics(BenchmarkResult benchmarkResult, Path arcDirectory) {
+	public void enrichMetrics(BenchmarkRunResult benchmarkRunResult, Path arcDirectory) {
 		try {
 			PlatformArchive platformArchive = PlatformArchive.readArchive(arcDirectory);
 			JSONObject processGraph = platformArchive.operation("ProcessGraph");
 			Integer procTime = Integer.parseInt(platformArchive.info(processGraph, "Duration"));
-			BenchmarkMetrics metrics = benchmarkResult.getMetrics();
+			BenchmarkMetrics metrics = benchmarkRunResult.getMetrics();
 			metrics.setProcessingTime(procTime);
 		} catch(Exception e) {
 			LOG.error("Failed to enrich metrics.");

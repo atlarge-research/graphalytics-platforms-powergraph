@@ -62,7 +62,7 @@ namespace granula {
     }
 
     void sendMonitorMessage(std::string message) {
-
+        fprintf(stdout, "Communicating with Granula monitor.\n");
         // server: for lookup of server address
         // serv_addr: serv_addr
         // portno: port number
@@ -78,14 +78,17 @@ namespace granula {
 
         // setup socket object
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
-        if (sockfd < 0)
-            error("ERROR opening socket");
+        if (sockfd < 0) {
+            fprintf(stdout, "Connection Failed: cannot open socket.\n");
+            return;
+        }
 
         // set up server by hostname
         server = gethostbyname("localhost");
         if (server == NULL) {
-            fprintf(stderr, "ERROR, no such host\n");
-            exit(0);
+            fprintf(stdout, "Connection Failed: no such host.\n");
+            close(sockfd);
+            return;
         }
 
         // set up server address using server object
@@ -96,8 +99,11 @@ namespace granula {
         serv_addr.sin_port = htons(portno);
 
         // connect socket to server address
-        if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
-            error("ERROR connecting");
+        if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+            fprintf(stdout, "Connection Failed: cannot connect to server.\n");
+            close(sockfd);
+            return;
+        }
 
         // buffer message before send
         bzero(buffer, 512);
@@ -107,11 +113,14 @@ namespace granula {
 
         // write to socket
         n = write(sockfd, buffer, strlen(buffer));
-        if (n < 0)
-            error("ERROR writing to socket");
+        if (n < 0) {
+             fprintf(stdout, "Connection Failed: cannot write to socket.\n");
+             close(sockfd);
+        }
 
         close(sockfd);
     }
+
 
     void linkProcess(int processId, std::string jobId) {
         std::string message = "{\"type\":\"Monitor\", \"state\":\"LinkProcess\", \"jobId\":\""+jobId+"\", \"processId\":\""+std::to_string(processId)+"\"}";
