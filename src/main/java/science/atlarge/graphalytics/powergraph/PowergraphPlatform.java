@@ -95,7 +95,12 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void uploadGraph(FormattedGraph formattedGraph) throws Exception {
+	public void verifySetup() {
+
+	}
+
+	@Override
+	public void loadGraph(FormattedGraph formattedGraph) throws Exception {
 		graphDirected = formattedGraph.isDirected();
 		edgeFilePath = formattedGraph.getEdgeFilePath();
 		vertexFilePath = formattedGraph.getVertexFilePath();
@@ -108,7 +113,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public boolean execute(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
+	public boolean run(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
 		PowergraphJob job;
 		Object params = benchmarkRun.getAlgorithmParameters();
 
@@ -175,17 +180,17 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void preprocess(BenchmarkRun benchmarkRun) {
+	public void startup(BenchmarkRun benchmarkRun) {
 		startPlatformLogging(benchmarkRun.getLogDir().resolve("platform").resolve("driver.logs"));
 	}
 
 	@Override
-	public void cleanup(BenchmarkRun benchmarkRun) {
+	public void terminate(BenchmarkRun benchmarkRun) {
 
 	}
 
 	@Override
-	public BenchmarkMetrics postprocess(BenchmarkRun benchmarkRun) {
+	public BenchmarkMetrics finalize(BenchmarkRun benchmarkRun) {
 		stopPlatformLogging();
 		return new BenchmarkMetrics();
 	}
