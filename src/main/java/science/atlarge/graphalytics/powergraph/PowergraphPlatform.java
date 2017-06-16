@@ -59,13 +59,9 @@ import org.json.simple.JSONObject;
  */
 public class PowergraphPlatform implements GranulaAwarePlatform {
 	protected static final Logger LOG = LogManager.getLogger();
+	private static PrintStream sysOut;
+	private static PrintStream sysErr;
 
-	/**
-	 * File name for the file storing configuration options
-	 */
-
-
-	public static final String PLATFORM_NAME = "powergraph";
 	public static final String BENCHMARK_PROPERTIES_FILE = "benchmark.properties";
 	private static final String GRANULA_PROPERTIES_FILE = "granula.properties";
 
@@ -76,8 +72,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	private String edgeFilePath;
 	private String vertexFilePath;
 	private Configuration benchmarkConfig;
-	private static PrintStream sysOut;
-	private static PrintStream sysErr;
+
 
 	public PowergraphPlatform() {
 
@@ -108,10 +103,20 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 		vertexFilePath = formattedGraph.getVertexFilePath();
 	}
 
+	@Override
+	public void deleteGraph(FormattedGraph formattedGraph) {
+		//
+	}
+
 	private void setupGraphPath(FormattedGraph formattedGraph) {
 		graphDirected = formattedGraph.isDirected();
 		edgeFilePath = formattedGraph.getEdgeFilePath();
 		vertexFilePath = formattedGraph.getVertexFilePath();
+	}
+
+	@Override
+	public void prepare(BenchmarkRun benchmarkRun) {
+
 	}
 
 	@Override
@@ -165,31 +170,10 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void deleteGraph(FormattedGraph formattedGraph) {
-		//
-	}
-
-
-
-	@Override
-	public String getPlatformName() {
-		return "powergraph";
-	}
-
-	@Override
-	public void prepare(BenchmarkRun benchmarkRun) {
-
-	}
-
-	@Override
 	public void startup(BenchmarkRun benchmarkRun) {
 		startPlatformLogging(benchmarkRun.getLogDir().resolve("platform").resolve("driver.logs"));
 	}
 
-	@Override
-	public void terminate(BenchmarkRun benchmarkRun) {
-
-	}
 
 	@Override
 	public BenchmarkMetrics finalize(BenchmarkRun benchmarkRun) {
@@ -198,12 +182,27 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public JobModel getJobModel() {
-		return new JobModel(new Powergraph());
+	public void enrichMetrics(BenchmarkRunResult benchmarkRunResult, Path arcDirectory) {
+		try {
+			PlatformArchive platformArchive = PlatformArchive.readArchive(arcDirectory);
+			JSONObject processGraph = platformArchive.operation("ProcessGraph");
+			BenchmarkMetrics metrics = benchmarkRunResult.getMetrics();
+
+			Integer procTimeMS = Integer.parseInt(platformArchive.info(processGraph, "Duration"));
+			BigDecimal procTimeS = (new BigDecimal(procTimeMS)).divide(new BigDecimal(1000), 3, BigDecimal.ROUND_CEILING);
+			metrics.setProcessingTime(new BenchmarkMetric(procTimeS, "s"));
+
+		} catch(Exception e) {
+			LOG.error("Failed to enrich metrics.");
+		}
 	}
 
+	@Override
+	public void terminate(BenchmarkRun benchmarkRun) {
 
-	public static void startPlatformLogging(Path fileName) {
+	}
+
+	private static void startPlatformLogging(Path fileName) {
 		sysOut = System.out;
 		sysErr = System.err;
 		try {
@@ -223,26 +222,20 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 		System.out.println("StartTime: " + System.currentTimeMillis());
 	}
 
-	public static void stopPlatformLogging() {
+	private static void stopPlatformLogging() {
 		System.out.println("EndTime: " + System.currentTimeMillis());
 		System.setOut(sysOut);
 		System.setErr(sysErr);
 	}
 
+	@Override
+	public JobModel getJobModel() {
+		return new JobModel(new Powergraph());
+	}
 
 	@Override
-	public void enrichMetrics(BenchmarkRunResult benchmarkRunResult, Path arcDirectory) {
-		try {
-			PlatformArchive platformArchive = PlatformArchive.readArchive(arcDirectory);
-			JSONObject processGraph = platformArchive.operation("ProcessGraph");
-			BenchmarkMetrics metrics = benchmarkRunResult.getMetrics();
-
-			Integer procTimeMS = Integer.parseInt(platformArchive.info(processGraph, "Duration"));
-			BigDecimal procTimeS = (new BigDecimal(procTimeMS)).divide(new BigDecimal(1000), 3, BigDecimal.ROUND_CEILING);
-			metrics.setProcessingTime(new BenchmarkMetric(procTimeS, "s"));
-
-		} catch(Exception e) {
-			LOG.error("Failed to enrich metrics.");
-		}
+	public String getPlatformName() {
+		return "powergraph";
 	}
+
 }
