@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 
 import nl.tudelft.granula.archiver.PlatformArchive;
@@ -28,6 +29,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
+import science.atlarge.graphalytics.report.result.BenchmarkMetric;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
 import science.atlarge.graphalytics.report.result.BenchmarkRunResult;
 import science.atlarge.graphalytics.domain.benchmark.BenchmarkRun;
@@ -233,9 +235,12 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 		try {
 			PlatformArchive platformArchive = PlatformArchive.readArchive(arcDirectory);
 			JSONObject processGraph = platformArchive.operation("ProcessGraph");
-			Integer procTime = Integer.parseInt(platformArchive.info(processGraph, "Duration"));
 			BenchmarkMetrics metrics = benchmarkRunResult.getMetrics();
-			metrics.setProcessingTime(procTime);
+
+			Integer procTimeMS = Integer.parseInt(platformArchive.info(processGraph, "Duration"));
+			BigDecimal procTimeS = (new BigDecimal(procTimeMS)).divide(new BigDecimal(1000), 3, BigDecimal.ROUND_CEILING);
+			metrics.setProcessingTime(new BenchmarkMetric(procTimeS, "s"));
+
 		} catch(Exception e) {
 			LOG.error("Failed to enrich metrics.");
 		}
