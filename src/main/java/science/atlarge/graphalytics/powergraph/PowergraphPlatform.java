@@ -20,11 +20,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nl.tudelft.granula.archiver.PlatformArchive;
 import nl.tudelft.granula.modeller.job.JobModel;
 import nl.tudelft.granula.modeller.platform.Powergraph;
+import nl.tudelft.granula.util.FileUtil;
 import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
@@ -178,7 +188,47 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	@Override
 	public BenchmarkMetrics finalize(BenchmarkRun benchmarkRun) {
 		stopPlatformLogging();
-		return new BenchmarkMetrics();
+
+		Path platformLogPath = benchmarkRun.getLogDir().resolve("platform");
+
+		final List<Double> superstepTimes = new ArrayList<>();
+
+		try {
+			Files.walkFileTree(platformLogPath, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+					String logs = FileUtil.readFile(file);
+					for (String line : logs.split("\n")) {
+						if (line.contains("- run algorithm:")) {
+							Pattern regex = Pattern.compile(
+									".* - run algorithm: ([+-]?([0-9]*[.])?[0-9]+) sec.*");
+							Matcher matcher = regex.matcher(line);
+							matcher.find();
+							superstepTimes.add(Double.parseDouble(matcher.group(2)));
+						}
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (superstepTimes.size() != 0) {
+			Double procTime = 0.0;
+			for (Double superstepTime : superstepTimes) {
+				procTime += superstepTime;
+			}
+
+			BenchmarkMetrics metrics = new BenchmarkMetrics();
+			BigDecimal procTimeS = (new BigDecimal(procTime)).setScale(3, RoundingMode.CEILING);
+			metrics.setProcessingTime(new BenchmarkMetric(procTimeS, "s"));
+
+			return metrics;
+		} else {
+			LOG.error("Failed to find any metrics regarding superstep runtime.");
+			return new BenchmarkMetrics();
+		}
 	}
 
 	@Override
