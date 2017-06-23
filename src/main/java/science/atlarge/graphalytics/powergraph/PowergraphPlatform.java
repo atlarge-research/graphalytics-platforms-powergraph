@@ -130,7 +130,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public boolean run(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
+	public void run(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
 		PowergraphJob job;
 		Object params = benchmarkRun.getAlgorithmParameters();
 
@@ -176,7 +176,6 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 			throw new PlatformExecutionException("failed to execute command", e);
 		}
 
-		return true;
 	}
 
 	@Override
