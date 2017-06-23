@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller;
+package science.atlarge.granula.modeller;
 
-import nl.tudelft.granula.modeller.entity.BasicType;
+import science.atlarge.granula.modeller.entity.BasicType;
 
 public class Type extends BasicType {
 

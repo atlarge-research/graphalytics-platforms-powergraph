@@ -1,10 +1,10 @@
-package nl.tudelft.granula.modeller.rule.extraction;
+package science.atlarge.granula.modeller.rule.extraction;
 
-import nl.tudelft.granula.modeller.rule.extraction.ExtractionRule;
-import nl.tudelft.granula.modeller.source.DataStream;
-import nl.tudelft.granula.modeller.source.log.Log;
-import nl.tudelft.granula.modeller.source.log.LogLocation;
-import nl.tudelft.granula.util.UuidGenerator;
+import science.atlarge.granula.modeller.rule.extraction.ExtractionRule;
+import science.atlarge.granula.modeller.source.DataStream;
+import science.atlarge.granula.modeller.source.log.Log;
+import science.atlarge.granula.modeller.source.log.LogLocation;
+import science.atlarge.granula.util.UuidGenerator;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

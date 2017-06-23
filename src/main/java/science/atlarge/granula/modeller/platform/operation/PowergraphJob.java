@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller.platform.operation;
+package science.atlarge.granula.modeller.platform.operation;
 
-import nl.tudelft.granula.modeller.Type;
-import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.DurationDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.JobEndTimeDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.JobStartTimeDerivation;
-import nl.tudelft.granula.modeller.rule.linking.EmptyLinking;
-import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
+import science.atlarge.granula.modeller.Type;
+import science.atlarge.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import science.atlarge.granula.modeller.rule.derivation.time.DurationDerivation;
+import science.atlarge.granula.modeller.rule.derivation.time.JobEndTimeDerivation;
+import science.atlarge.granula.modeller.rule.derivation.time.JobStartTimeDerivation;
+import science.atlarge.granula.modeller.rule.linking.EmptyLinking;
+import science.atlarge.granula.modeller.rule.visual.TableVisualization;
 
 import java.util.ArrayList;
 
-public class PowergraphJob extends nl.tudelft.granula.modeller.platform.operation.AbstractOperationModel {
+public class PowergraphJob extends science.atlarge.granula.modeller.platform.operation.AbstractOperationModel {
 
     public PowergraphJob() {
         super(Type.PowerGraph, Type.Job);
