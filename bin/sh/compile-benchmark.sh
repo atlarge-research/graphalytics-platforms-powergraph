@@ -15,23 +15,13 @@
 # limitations under the License.
 #
 
+
 # Ensure the configuration file exists
+rootdir=$(dirname $(readlink -f ${BASH_SOURCE[0]}))/../../
+config="${rootdir}/config/"
 if [ ! -f "$config/platform.properties" ]; then
 	echo "Missing mandatory configuration file: $config/platform.properties" >&2
 	exit 1
-fi
-
-
-# Set library jar
-export LIBRARY_JAR=`ls lib/graphalytics-*default*.jar`
-GRANULA_ENABLED=$(grep -E "^benchmark.run.granula.enabled[	 ]*[:=]" $config/granula.properties | sed 's/benchmark.run.granula.enabled[\t ]*[:=][\t ]*\([^\t ]*\).*/\1/g' | head -n 1)
-if [ "$GRANULA_ENABLED" = "true" ] ; then
- if ! find lib -name "graphalytics-platforms-*-granula.jar" | grep -q '.'; then
-    echo "Failed to find the library jar with Granula plugin" >&2
-    exit 1
- else
-    export LIBRARY_JAR=`ls lib/graphalytics-platforms-*-granula.jar`
- fi
 fi
 
 
@@ -42,4 +32,32 @@ if [ -z POWERGRAPH_HOME ]; then
     echo "Define the environment variable \$POWERGRAPH_HOME or modify platform.powergraph.home in $config/platform.properties"
     exit 1
 fi
+GRANULA_ENABLED=$(grep -E "^benchmark.run.granula.enabled[	 ]*[:=]" $config/granula.properties | sed 's/benchmark.run.granula.enabled[\t ]*[:=][\t ]*\([^\t ]*\).*/\1/g' | head -n 1)
 
+
+# Build binaries
+module unload intel-mpi
+module unload gcc
+module load openmpi
+module load openmpi/gcc
+module list
+
+if [ -z $DISABLE_MPI ]; then
+    DISABLE_MPI=`awk -F' *= *' '{ if ($1 == "platform.powergraph.disable_mpi") print $2 }' $config/platform.properties`
+fi
+
+DISABLE_JVM=1
+
+mkdir -p bin/standard
+(cd bin/standard && cmake -DCMAKE_BUILD_TYPE=Release ../../src/main/c -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=$DISABLE_JVM -DNO_MPI=$DISABLE_MPI && make all)
+
+if [ "$GRANULA_ENABLED" = "true" ] ; then
+ mkdir -p bin/granula
+ (cd bin/granula && cmake -DCMAKE_BUILD_TYPE=Release -DGRANULA=1 ../../src/main/c -DPOWERGRAPH_HOME=$POWERGRAPH_HOME -DNO_JVM=$DISABLE_JVM -DNO_MPI=$DISABLE_MPI && make all)
+fi
+
+if [ $? -ne 0 ]
+then
+    echo "compilation failed"
+    exit 1
+fi
