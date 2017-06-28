@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller.platform.operation;
+package science.atlarge.granula.modeller.platform.operation;
 
-import nl.tudelft.granula.modeller.Type;
-import nl.tudelft.granula.modeller.rule.derivation.ColorDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
-import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
-import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
+import science.atlarge.granula.modeller.Type;
+import science.atlarge.granula.modeller.rule.derivation.ColorDerivation;
+import science.atlarge.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import science.atlarge.granula.modeller.rule.linking.UniqueParentLinking;
+import science.atlarge.granula.modeller.rule.visual.TableVisualization;
 
 import java.util.ArrayList;
 
-public class LoadGraph extends RealtimeOperationModel {
+public class ProcessGraph extends RealtimeOperationModel {
 
-    public LoadGraph() {
-        super(Type.PowerGraph, Type.LoadGraph);
+    public ProcessGraph() {
+        super(Type.PowerGraph, Type.ProcessGraph);
     }
 
     public void loadRules() {
@@ -35,14 +35,14 @@ public class LoadGraph extends RealtimeOperationModel {
 
         addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
 
-        String summary = "LoadGraph.";
+
+        String summary = "ProcessGraph.";
         addInfoDerivation(new SimpleSummaryDerivation(11, summary));
 
         addVisualDerivation(new TableVisualization(1, "MainInfo",
                 new ArrayList<String>() {{
                 }}));
-
-        addInfoDerivation(new ColorDerivation(11, "#393"));
+        addInfoDerivation(new ColorDerivation(11, "#3cf"));
     }
 
 }

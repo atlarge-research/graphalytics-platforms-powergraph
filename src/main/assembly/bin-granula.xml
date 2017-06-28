@@ -31,7 +31,7 @@
 			<directory>${project.basedir}</directory>
 			<outputDirectory>.</outputDirectory>
 			<includes>
-				<include>sh/**</include>
+				<include>bin/**</include>
 			</includes>
 		</fileSet>
 		<fileSet><!--Platform configuration files-->

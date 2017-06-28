@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller.platform;
+package science.atlarge.granula.modeller.platform;
 
-import nl.tudelft.granula.modeller.Type;
-import nl.tudelft.granula.modeller.job.Job;
-import nl.tudelft.granula.modeller.job.Overview;
-import nl.tudelft.granula.modeller.platform.info.BasicInfo;
-import nl.tudelft.granula.modeller.platform.info.Source;
-import nl.tudelft.granula.modeller.platform.operation.*;
-import nl.tudelft.granula.modeller.rule.derivation.DerivationRule;
-import nl.tudelft.granula.modeller.rule.extraction.PowergraphExtractionRule;
-import nl.tudelft.granula.modeller.rule.filling.UniqueOperationFilling;
+import science.atlarge.granula.modeller.Type;
+import science.atlarge.granula.modeller.job.Job;
+import science.atlarge.granula.modeller.job.Overview;
+import science.atlarge.granula.modeller.platform.info.BasicInfo;
+import science.atlarge.granula.modeller.platform.info.Source;
+import science.atlarge.granula.modeller.platform.operation.*;
+import science.atlarge.granula.modeller.rule.derivation.DerivationRule;
+import science.atlarge.granula.modeller.platform.operation.*;
+import science.atlarge.granula.modeller.rule.extraction.PowergraphExtractionRule;
+import science.atlarge.granula.modeller.rule.filling.UniqueOperationFilling;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -14,36 +14,31 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller.platform.operation;
+package science.atlarge.granula.modeller.platform.operation;
 
-import nl.tudelft.granula.modeller.Type;
-import nl.tudelft.granula.modeller.rule.derivation.ColorDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
-import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
-import nl.tudelft.granula.modeller.rule.visual.TableVisualization;
+import science.atlarge.granula.modeller.Type;
+import science.atlarge.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import science.atlarge.granula.modeller.rule.linking.UniqueParentLinking;
+import science.atlarge.granula.modeller.rule.visual.TableVisualization;
 
 import java.util.ArrayList;
 
-public class OffloadGraph extends RealtimeOperationModel {
+public class BspSuperstep extends RealtimeOperationModel {
 
-    public OffloadGraph() {
-        super(Type.PowerGraph, Type.OffloadGraph);
+    public BspSuperstep() {
+        super(Type.Bsp, Type.Superstep);
     }
 
     public void loadRules() {
         super.loadRules();
+        addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.ProcessGraph));
 
-        addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
-
-        String summary = "OffloadGraph.";
+        String summary = "BSPSuperstep.";
         addInfoDerivation(new SimpleSummaryDerivation(11, summary));
 
         addVisualDerivation(new TableVisualization(1, "MainInfo",
                 new ArrayList<String>() {{
                 }}));
-
-        addInfoDerivation(new ColorDerivation(11, "#393"));
     }
-
 
 }

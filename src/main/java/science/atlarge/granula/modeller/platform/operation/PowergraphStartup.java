@@ -14,30 +14,27 @@
  * limitations under the License.
  */
 
-package nl.tudelft.granula.modeller.platform.operation;
+package science.atlarge.granula.modeller.platform.operation;
 
-import nl.tudelft.granula.modeller.Type;
-import nl.tudelft.granula.modeller.rule.derivation.ColorDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.FilialCompletenessDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.SimpleSummaryDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.DurationDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.JobEndTimeDerivation;
-import nl.tudelft.granula.modeller.rule.derivation.time.SiblingStartTimeDerivation;
-import nl.tudelft.granula.modeller.rule.linking.UniqueParentLinking;
+import science.atlarge.granula.modeller.Type;
+import science.atlarge.granula.modeller.rule.derivation.ColorDerivation;
+import science.atlarge.granula.modeller.rule.derivation.FilialCompletenessDerivation;
+import science.atlarge.granula.modeller.rule.derivation.SimpleSummaryDerivation;
+import science.atlarge.granula.modeller.rule.derivation.time.*;
+import science.atlarge.granula.modeller.rule.linking.UniqueParentLinking;
 
-public class PowergraphCleanup extends AbstractOperationModel {
+public class PowergraphStartup extends AbstractOperationModel {
 
-    public PowergraphCleanup() {
-        super(Type.PowerGraph, Type.Cleanup);
+    public PowergraphStartup() {
+        super(Type.PowerGraph, Type.Startup);
     }
 
     public void loadRules() {
         super.loadRules();
         addLinkingRule(new UniqueParentLinking(Type.PowerGraph, Type.Job));
 
-        addInfoDerivation(new SiblingStartTimeDerivation(5, Type.PowerGraph, Type.OffloadGraph));
-
-        addInfoDerivation(new JobEndTimeDerivation(1));
+        addInfoDerivation(new JobStartTimeDerivation(1));
+        addInfoDerivation(new SiblingEndTimeDerivation(5, Type.PowerGraph, Type.LoadGraph));
         addInfoDerivation(new DurationDerivation(6));
         this.addInfoDerivation(new FilialCompletenessDerivation(2));
 
