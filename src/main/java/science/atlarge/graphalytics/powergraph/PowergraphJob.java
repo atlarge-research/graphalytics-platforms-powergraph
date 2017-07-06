@@ -72,8 +72,8 @@ abstract public class PowergraphJob {
 			argsString += arg += " ";
 		}
 
-		String cmdFormat = config.getString("platform.powergraph.command", "%s %s");
-		String cmd = String.format(cmdFormat,"./" + PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
+		String nodes = config.getString("platform.powergraph.nodes");
+		String cmd = String.format("./bin/sh/run-mpi.sh %s %s %s", nodes, PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
 
 		LOG.info("executing command: " + cmd);
 
