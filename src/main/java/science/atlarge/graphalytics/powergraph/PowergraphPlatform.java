@@ -205,7 +205,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 									".* - run algorithm: ([+-]?([0-9]*[.])?[0-9]+) sec.*");
 							Matcher matcher = regex.matcher(line);
 							matcher.find();
-							superstepTimes.add(Double.parseDouble(matcher.group(2)));
+							superstepTimes.add(Double.parseDouble(matcher.group(1)));
 						}
 					}
 					return FileVisitResult.CONTINUE;
