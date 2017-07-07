@@ -52,9 +52,12 @@ public class BreadthFirstSearchJobTest extends BreadthFirstSearchValidationTest 
 		Utils.writeVerticesToFile(graph, verticesFile);
 
 		String jobId = "RandomJobId";
+		String logPath = "RandomLogDir";
 
 		BreadthFirstSearchJob job = new BreadthFirstSearchJob(
-				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, parameters, jobId);
+				Utils.loadConfiguration(),
+				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
+				directed, parameters, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		

@@ -26,8 +26,8 @@ public class PageRankJob extends PowergraphJob {
 	PageRankParameters params;
 
 	public PageRankJob(Configuration config, String verticesPath, String edgesPath,
-					   boolean graphDirected, PageRankParameters params, String jobId) {
-		super(config, verticesPath, edgesPath, graphDirected, jobId);
+					   boolean graphDirected, PageRankParameters params, String jobId, String logPath) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId, logPath);
 		this.params = params;
 	}
 

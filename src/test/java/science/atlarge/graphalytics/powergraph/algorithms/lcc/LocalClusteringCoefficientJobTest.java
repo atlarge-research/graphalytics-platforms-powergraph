@@ -50,9 +50,12 @@ public class LocalClusteringCoefficientJobTest extends LocalClusteringCoefficien
 		Utils.writeVerticesToFile(graph, verticesFile);
 
 		String jobId = "RandomJobId";
+		String logPath = "RandomLogDir";
 
 		LocalClusteringCoefficientJob job = new LocalClusteringCoefficientJob(
-				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, jobId);
+				Utils.loadConfiguration(),
+				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
+				directed, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		

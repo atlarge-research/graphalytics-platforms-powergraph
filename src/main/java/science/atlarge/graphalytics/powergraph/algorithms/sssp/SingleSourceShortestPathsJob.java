@@ -27,8 +27,8 @@ public class SingleSourceShortestPathsJob extends PowergraphJob {
 	SingleSourceShortestPathsParameters params;
 
 	public SingleSourceShortestPathsJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
-										SingleSourceShortestPathsParameters params, String jobId) {
-		super(config, verticesPath, edgesPath, graphDirected, jobId);
+										SingleSourceShortestPathsParameters params, String jobId, String logPath) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId, logPath);
 		this.params = params;
 	}
 

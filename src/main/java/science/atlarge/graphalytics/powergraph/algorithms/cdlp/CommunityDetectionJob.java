@@ -26,8 +26,8 @@ public class CommunityDetectionJob extends PowergraphJob {
 	private CommunityDetectionLPParameters params;
 	
 	public CommunityDetectionJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
-								 CommunityDetectionLPParameters params, String jobId) {
-		super(config, verticesPath, edgesPath, graphDirected, jobId);
+								 CommunityDetectionLPParameters params, String jobId, String logPath) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId, logPath);
 		this.params = params;
 	}
 

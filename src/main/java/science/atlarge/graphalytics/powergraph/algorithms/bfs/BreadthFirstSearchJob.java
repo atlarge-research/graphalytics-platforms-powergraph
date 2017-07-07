@@ -27,8 +27,8 @@ public class BreadthFirstSearchJob extends PowergraphJob {
 	BreadthFirstSearchParameters params;
 
 	public BreadthFirstSearchJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected,
-								 BreadthFirstSearchParameters params, String jobId) {
-		super(config, verticesPath, edgesPath, graphDirected, jobId);
+								 BreadthFirstSearchParameters params, String jobId, String logPath) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId, logPath);
 		this.params = params;
 	}
 
