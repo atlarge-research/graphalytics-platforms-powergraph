@@ -39,6 +39,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
+import science.atlarge.graphalytics.execution.BenchmarkRunner;
 import science.atlarge.graphalytics.report.result.BenchmarkMetric;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
 import science.atlarge.graphalytics.report.result.BenchmarkRunResult;
@@ -61,6 +62,7 @@ import science.atlarge.graphalytics.powergraph.algorithms.pr.PageRankJob;
 import science.atlarge.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathsJob;
 import science.atlarge.graphalytics.powergraph.algorithms.lcc.LocalClusteringCoefficientJob;
 import org.json.simple.JSONObject;
+import science.atlarge.graphalytics.util.ProcessUtil;
 
 /**
  * PowerGraph implementation of the Graphalytics benchmark.
@@ -250,7 +252,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 	@Override
 	public void terminate(BenchmarkRun benchmarkRun) {
-
+		BenchmarkRunner.terminatePlatform(benchmarkRun);
 	}
 
 	private static void startPlatformLogging(Path fileName) {
