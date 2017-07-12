@@ -48,9 +48,12 @@ public class WeaklyConnectedComponentsJobTest extends WeaklyConnectedComponentsV
 		Utils.writeVerticesToFile(graph, verticesFile);
 
 		String jobId = "RandomJobId";
+		String logPath = "RandomLogDir";
 
 		ConnectedComponentsJob job = new ConnectedComponentsJob(
-				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, jobId);
+				Utils.loadConfiguration(),
+				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
+				directed, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		

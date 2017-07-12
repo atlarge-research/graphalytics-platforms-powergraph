@@ -35,13 +35,15 @@ abstract public class PowergraphJob {
 	private boolean graphDirected;
 	private File outputFile;
 	private Configuration config;
+	private String logPath;
 
-	public PowergraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId) {
+	public PowergraphJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId, String logPath) {
 		this.config = config;
 		this.verticesPath = verticesPath;
 		this.edgesPath = edgesPath;
 		this.graphDirected = graphDirected;
 		this.jobId = jobId;
+		this.logPath = logPath;
 	}
 
 	abstract protected void addJobArguments(List<String> args);
@@ -72,8 +74,8 @@ abstract public class PowergraphJob {
 			argsString += arg += " ";
 		}
 
-		String cmdFormat = config.getString("platform.powergraph.command", "%s %s");
-		String cmd = String.format(cmdFormat,"./" + PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
+		String nodes = config.getString("platform.powergraph.nodes");
+		String cmd = String.format("./bin/sh/run-mpi.sh %s %s %s %s", nodes, logPath, PowergraphPlatform.POWERGRAPH_BINARY_NAME, argsString);
 
 		LOG.info("executing command: " + cmd);
 

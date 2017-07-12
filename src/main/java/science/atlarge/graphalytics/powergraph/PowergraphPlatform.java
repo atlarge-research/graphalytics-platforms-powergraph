@@ -39,6 +39,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
+import science.atlarge.graphalytics.execution.BenchmarkRunner;
 import science.atlarge.graphalytics.report.result.BenchmarkMetric;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
 import science.atlarge.graphalytics.report.result.BenchmarkRunResult;
@@ -61,6 +62,7 @@ import science.atlarge.graphalytics.powergraph.algorithms.pr.PageRankJob;
 import science.atlarge.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathsJob;
 import science.atlarge.graphalytics.powergraph.algorithms.lcc.LocalClusteringCoefficientJob;
 import org.json.simple.JSONObject;
+import science.atlarge.graphalytics.util.ProcessUtil;
 
 /**
  * PowerGraph implementation of the Graphalytics benchmark.
@@ -134,32 +136,34 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 		PowergraphJob job;
 		Object params = benchmarkRun.getAlgorithmParameters();
 
+		String logPath = benchmarkRun.getLogDir().resolve("platform").toString();
+
 		setupGraphPath(benchmarkRun.getFormattedGraph());
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
 				job = new BreadthFirstSearchJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, (BreadthFirstSearchParameters) params, benchmarkRun.getId());
+						graphDirected, (BreadthFirstSearchParameters) params, benchmarkRun.getId(), logPath);
 				break;
 			case WCC:
 				job = new ConnectedComponentsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, benchmarkRun.getId());
+						graphDirected, benchmarkRun.getId(), logPath);
 				break;
 			case LCC:
 				job = new LocalClusteringCoefficientJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, benchmarkRun.getId());
+						graphDirected, benchmarkRun.getId(), logPath);
 				break;
 			case CDLP:
 				job = new CommunityDetectionJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, (CommunityDetectionLPParameters) params, benchmarkRun.getId());
+						graphDirected, (CommunityDetectionLPParameters) params, benchmarkRun.getId(), logPath);
 				break;
 			case PR:
 				job = new PageRankJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, (PageRankParameters) params, benchmarkRun.getId());
+						graphDirected, (PageRankParameters) params, benchmarkRun.getId(), logPath);
 				break;
 			case SSSP:
 				job = new SingleSourceShortestPathsJob(benchmarkConfig, vertexFilePath, edgeFilePath,
-						graphDirected, (SingleSourceShortestPathsParameters) params, benchmarkRun.getId());
+						graphDirected, (SingleSourceShortestPathsParameters) params, benchmarkRun.getId(), logPath);
 				break;
 			default:
 				throw new PlatformExecutionException("Unsupported algorithm");
@@ -203,7 +207,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 									".* - run algorithm: ([+-]?([0-9]*[.])?[0-9]+) sec.*");
 							Matcher matcher = regex.matcher(line);
 							matcher.find();
-							superstepTimes.add(Double.parseDouble(matcher.group(2)));
+							superstepTimes.add(Double.parseDouble(matcher.group(1)));
 						}
 					}
 					return FileVisitResult.CONTINUE;
@@ -248,7 +252,7 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 	@Override
 	public void terminate(BenchmarkRun benchmarkRun) {
-
+		BenchmarkRunner.terminatePlatform(benchmarkRun);
 	}
 
 	private static void startPlatformLogging(Path fileName) {

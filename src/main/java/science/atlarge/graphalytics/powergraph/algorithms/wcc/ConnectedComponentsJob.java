@@ -23,8 +23,8 @@ import science.atlarge.graphalytics.powergraph.PowergraphJob;
 
 public class ConnectedComponentsJob extends PowergraphJob {
 
-	public ConnectedComponentsJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId) {
-		super(config, verticesPath, edgesPath, graphDirected, jobId);
+	public ConnectedComponentsJob(Configuration config, String verticesPath, String edgesPath, boolean graphDirected, String jobId, String logPath) {
+		super(config, verticesPath, edgesPath, graphDirected, jobId, logPath);
 	}
 
 	@Override

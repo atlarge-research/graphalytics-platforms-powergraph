@@ -52,9 +52,12 @@ public class CommunityDetectionLPJobTest extends CommunityDetectionLPValidationT
 		Utils.writeVerticesToFile(graph, verticesFile);
 
 		String jobId = "RandomJobId";
+		String logPath = "RandomLogDir";
 
 		CommunityDetectionJob job = new CommunityDetectionJob(
-				Utils.loadConfiguration(), verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(), directed, parameters, jobId);
+				Utils.loadConfiguration(),
+				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
+				directed, parameters, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		

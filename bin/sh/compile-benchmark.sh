@@ -42,10 +42,7 @@ module load openmpi
 module load openmpi/gcc
 module list
 
-if [ -z $DISABLE_MPI ]; then
-    DISABLE_MPI=`awk -F' *= *' '{ if ($1 == "platform.powergraph.disable_mpi") print $2 }' $config/platform.properties`
-fi
-
+DISABLE_MPI=false
 DISABLE_JVM=1
 
 mkdir -p bin/standard
