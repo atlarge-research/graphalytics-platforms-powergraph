@@ -14,9 +14,9 @@ The following dependencies are required for this platform extension (in parenthe
 * GNU Make (4.0)
 * OpenMPI or MPICH2 (if using PowerGraph distributed)
 
-Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory and compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no-jvm` flag.
+Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory and compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no_jvm` flag.
 
-Finally, refer to the documation of the Graphayltics core on how to build and run this platform repository.
+Finally, refer to the documentation of the Graphalytics core on how to build and run this platform repository.
 
 
 ## PowerGraph-implementation-specific configuration
