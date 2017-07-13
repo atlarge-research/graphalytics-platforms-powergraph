@@ -64,6 +64,12 @@ abstract public class PowergraphJob {
 			args.add(outputFile.getAbsolutePath());
 		}
 
+		int numThreads = config.getInt("platform.powergraph.num-threads", -1);
+
+		if (numThreads > 0) {
+			args.add("--ncpus");
+			args.add(String.valueOf(numThreads));
+		}
 
 		args.add("--job-id");
 		args.add(jobId);
