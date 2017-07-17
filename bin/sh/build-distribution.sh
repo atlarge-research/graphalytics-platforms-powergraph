@@ -20,7 +20,11 @@
 # Download Powergraph v2.2 #a038f97
 wget https://github.com/dato-code/PowerGraph
 
-# Change boost src to http://kent.dl.sourceforge.net/project/boost/boost/1.53.0/boost_1_53_0.tar.gz in CMakeList.
+# Move into the powergraph repo directory.
+cd powergraph
+
+# Replace CMakeLists.txt with our CMakeLists.txt to replace broken URIs.
+cp $(dirname -f "$0")/../fix/CMakeLists.txt CMakeLists.txt
 
 # Adapt compilation setup
 rm -rf deps/*
