@@ -14,7 +14,9 @@ The following dependencies are required for this platform extension (in parenthe
 * GNU Make (4.0)
 * OpenMPI or MPICH2 (if using PowerGraph distributed)
 
-Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory and compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no_jvm` flag.
+Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory, replace the `CMakeLists.txt` file in that directory with our `CMakeLists.txt` file in the `fix` directory and fully compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no_jvm` flag.
+
+Alternatively, one may use the `build-distribution.sh` script that performs the steps described above in an automated fashion.
 
 Finally, refer to the documentation of the Graphalytics core on how to build and run this platform repository.
 
@@ -31,4 +33,4 @@ Edit `config/powergraph.properties` to change the following settings:
 ## Known Issues
 
 * PowerGraph does not support machines with more than 64 threads. A workaround has been proposed in [this issue](https://github.com/tudelft-atlarge/graphalytics-platforms-powergraph/issues/4).
-
+* The PowerGraph installation process is somewhat outdated, it has a few broken links to dependencies. Using our [CMakeLists.txt](https://github.com/tudelft-atlarge/graphalytics-platforms-powergraph/blob/master/fix/CMakeLists.txt) fixes these broken URIs.
