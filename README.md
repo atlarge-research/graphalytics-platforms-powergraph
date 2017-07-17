@@ -23,10 +23,9 @@ Finally, refer to the documentation of the Graphalytics core on how to build and
 
 Edit `config/powergraph.properties` to change the following settings:
 
- - `powergraph.home`: Set to the root directory where PowerGraph has been installed.
- - `powergraph.disable_mpi`: Set this flag if PowerGraph has been compiled without MPI support (i.e., configured with `-no_mpi`)
- - `powergraph.num-threads`: Set the number of threads PowerGraph should use.
- - `powergraph.command`: Set the command to run when launching PowerGraph. The default value is "%s %s" where the first argument refers to the binary name and the second arguments refers to the binary arguments. For example, change the value to "mpirun -np 2 %s %s" to execute PowerGraph using MPI on two nodes.
+ - `platform.powergraph.home`: Set to the root directory where PowerGraph has been installed.
+ - `platform.powergraph.num-threads`: Set the number of threads PowerGraph should use.
+ - `platform.powergraph.nodes`: Set the the names of computation nodes, with format e.g., "10.149.0.55\,10.149.0.56";
 
 
 ## Known Issues
