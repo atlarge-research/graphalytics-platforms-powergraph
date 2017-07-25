@@ -24,7 +24,7 @@ git clone https://github.com/graphlab-code/graphlab.git
 cd graphlab
 
 # Replace CMakeLists.txt with our CMakeLists.txt to replace broken URIs.
-cp ../$(dirname "$0")/../../fix/CMakeLists.txt CMakeLists.txt
+patch CMakeLists.txt < ../$(dirname "$0")/../utils/CMakeLists.diff
 
 # Adapt compilation setup
 rm -rf deps/*
