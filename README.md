@@ -9,12 +9,12 @@ Please refer to the documentation of the Graphalytics core (`graphalytics` repos
 The following dependencies are required for this platform extension (in parentheses are the recommended versions):
 
 * Any C compiler (`gcc` 5.2.1)
-* [PowerGraph](https://github.com/dato-code/PowerGraph) (2.2)
+* [PowerGraph](https://github.com/jegonzal/PowerGraph) (2.2)
 * CMake (3.2.2)
 * GNU Make (4.0)
 * OpenMPI or MPICH2 (if using PowerGraph distributed)
 
-Download [PowerGraph](https://github.com/dato-code/PowerGraph), unpack into any directory, replace the `CMakeLists.txt` file in that directory with our `CMakeLists.txt` file in the `fix` directory and fully compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no_jvm` flag.
+Download [PowerGraph](https://github.com/jegonzal/PowerGraph), unpack into any directory, replace the `CMakeLists.txt` file in that directory with our `CMakeLists.txt` file in the `fix` directory and fully compile/build using the instructions given by the authors. Note that Graphalytics does not support HDFS as data source for PowerGraph, so it is recommended to compile with the `--no_jvm` flag.
 
 Alternatively, one may use the `build-distribution.sh` script that performs the steps described above in an automated fashion.
 

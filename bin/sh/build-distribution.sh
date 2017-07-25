@@ -18,7 +18,7 @@
 # Adapt this build script to your cluster environment.
 
 # Download Powergraph v2.2 #a038f97
-git clone https://github.com/graphlab-code/graphlab.git
+git clone https://github.com/jegonzal/PowerGraph
 
 # Move into the powergraph repo directory.
 cd graphlab
