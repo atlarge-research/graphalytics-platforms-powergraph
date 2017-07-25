@@ -24,7 +24,7 @@ git clone https://github.com/jegonzal/PowerGraph
 cd graphlab
 
 # Replace CMakeLists.txt with our CMakeLists.txt to replace broken URIs.
-patch CMakeLists.txt < ../$(dirname "$0")/../utils/CMakeLists.diff
+patch CMakeLists.txt < ../$(dirname "$0")/../utils/CMakeLists_a038f97.diff
 
 # Adapt compilation setup
 rm -rf deps/*
