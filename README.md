@@ -33,4 +33,4 @@ Edit `config/powergraph.properties` to change the following settings:
 ## Known Issues
 
 * PowerGraph does not support machines with more than 64 threads. A workaround has been proposed in [this issue](https://github.com/tudelft-atlarge/graphalytics-platforms-powergraph/issues/4).
-* The PowerGraph installation process is somewhat outdated, it has a few broken links to dependencies. Using our [CMakeLists.txt](https://github.com/tudelft-atlarge/graphalytics-platforms-powergraph/blob/master/fix/CMakeLists.txt) fixes these broken URIs.
+* The PowerGraph installation process is somewhat outdated, it has a few broken links to dependencies. Patching the CMakeLists.txt file with our [diff](https://github.com/atlarge-research/graphalytics-platforms-powergraph/tree/master/bin/utils/CMakeLists_a038f97.diff) fixes these broken URIs.
