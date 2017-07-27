@@ -18,13 +18,15 @@
 # Adapt this build script to your cluster environment.
 
 # Download Powergraph v2.2 #a038f97
-git clone https://github.com/graphlab-code/graphlab.git
+git clone https://github.com/jegonzal/PowerGraph
 
 # Move into the powergraph repo directory.
 cd PowerGraph
 
-# Replace CMakeLists.txt with our CMakeLists.txt to replace broken URIs.
-cp ../$(dirname "$0")/../../fix/CMakeLists.txt CMakeLists.txt
+# Patch the Powergraph CMakeLists.txt to change dependency lines containing broken URIs.
+# Replace the hash in the patch name with any newer version for which a patch file exists,
+# or when this is fixed, comment out the patch entirely.
+patch CMakeLists.txt < ../$(dirname "$0")/../utils/CMakeLists_a038f97.diff
 
 # Adapt compilation setup
 rm -rf deps/*
