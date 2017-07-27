@@ -21,7 +21,7 @@
 git clone https://github.com/graphlab-code/graphlab.git
 
 # Move into the powergraph repo directory.
-cd graphlab
+cd PowerGraph
 
 # Replace CMakeLists.txt with our CMakeLists.txt to replace broken URIs.
 cp ../$(dirname "$0")/../../fix/CMakeLists.txt CMakeLists.txt
