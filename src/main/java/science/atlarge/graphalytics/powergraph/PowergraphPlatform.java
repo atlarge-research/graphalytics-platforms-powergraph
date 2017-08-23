@@ -39,6 +39,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
+import science.atlarge.graphalytics.domain.graph.LoadedGraph;
 import science.atlarge.graphalytics.execution.BenchmarkRunner;
 import science.atlarge.graphalytics.report.result.BenchmarkMetric;
 import science.atlarge.graphalytics.report.result.BenchmarkMetrics;
@@ -80,9 +81,6 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	public static final String GRANULA_ENABLE_KEY = "benchmark.run.granula.enabled";
 	public static String POWERGRAPH_BINARY_NAME = "bin/standard/main";
 
-	private boolean graphDirected;
-	private String edgeFilePath;
-	private String vertexFilePath;
 	private Configuration benchmarkConfig;
 
 
@@ -109,21 +107,13 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void loadGraph(FormattedGraph formattedGraph) throws Exception {
-		graphDirected = formattedGraph.isDirected();
-		edgeFilePath = formattedGraph.getEdgeFilePath();
-		vertexFilePath = formattedGraph.getVertexFilePath();
+	public LoadedGraph loadGraph(FormattedGraph formattedGraph) throws Exception {
+		return new LoadedGraph(formattedGraph, formattedGraph.getVertexFilePath(), formattedGraph.getEdgeFilePath());
 	}
 
 	@Override
-	public void deleteGraph(FormattedGraph formattedGraph) {
+	public void deleteGraph(LoadedGraph loadedGraph) {
 		//
-	}
-
-	private void setupGraphPath(FormattedGraph formattedGraph) {
-		graphDirected = formattedGraph.isDirected();
-		edgeFilePath = formattedGraph.getEdgeFilePath();
-		vertexFilePath = formattedGraph.getVertexFilePath();
 	}
 
 	@Override
@@ -138,7 +128,9 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 
 		String logPath = benchmarkRun.getLogDir().resolve("platform").toString();
 
-		setupGraphPath(benchmarkRun.getFormattedGraph());
+		boolean graphDirected = benchmarkRun.getFormattedGraph().isDirected();
+		String vertexFilePath = benchmarkRun.getLoadedGraph().getVertexFilePath();
+		String edgeFilePath = benchmarkRun.getLoadedGraph().getEdgeFilePath();
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
