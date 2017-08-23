@@ -38,6 +38,9 @@ import science.atlarge.granula.util.FileUtil;
 import org.apache.commons.io.output.TeeOutputStream;
 import science.atlarge.graphalytics.configuration.ConfigurationUtil;
 import science.atlarge.graphalytics.configuration.InvalidConfigurationException;
+import science.atlarge.graphalytics.execution.BenchmarkRunSetup;
+import science.atlarge.graphalytics.execution.RunSpecification;
+import science.atlarge.graphalytics.execution.RuntimeSetup;
 import science.atlarge.graphalytics.domain.graph.FormattedGraph;
 import science.atlarge.graphalytics.domain.graph.LoadedGraph;
 import science.atlarge.graphalytics.execution.BenchmarkRunner;
@@ -63,7 +66,6 @@ import science.atlarge.graphalytics.powergraph.algorithms.pr.PageRankJob;
 import science.atlarge.graphalytics.powergraph.algorithms.sssp.SingleSourceShortestPathsJob;
 import science.atlarge.graphalytics.powergraph.algorithms.lcc.LocalClusteringCoefficientJob;
 import org.json.simple.JSONObject;
-import science.atlarge.graphalytics.util.ProcessUtil;
 
 /**
  * PowerGraph implementation of the Graphalytics benchmark.
@@ -117,20 +119,25 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void prepare(BenchmarkRun benchmarkRun) {
+	public void prepare(RunSpecification runSpecification) {
 
 	}
 
 	@Override
-	public void run(BenchmarkRun benchmarkRun) throws PlatformExecutionException {
+	public void run(RunSpecification runSpecification) throws PlatformExecutionException {
+
+		BenchmarkRun benchmarkRun = runSpecification.getBenchmarkRun();
+		BenchmarkRunSetup benchmarkRunSetup = runSpecification.getBenchmarkRunSetup();
+		RuntimeSetup runtimeSetup = runSpecification.getRuntimeSetup();
+
 		PowergraphJob job;
 		Object params = benchmarkRun.getAlgorithmParameters();
 
-		String logPath = benchmarkRun.getLogDir().resolve("platform").toString();
+		String logPath = benchmarkRunSetup.getLogDir().resolve("platform").toString();
 
 		boolean graphDirected = benchmarkRun.getFormattedGraph().isDirected();
-		String vertexFilePath = benchmarkRun.getLoadedGraph().getVertexFilePath();
-		String edgeFilePath = benchmarkRun.getLoadedGraph().getEdgeFilePath();
+		String vertexFilePath = runtimeSetup.getLoadedGraph().getVertexPath();
+		String edgeFilePath = runtimeSetup.getLoadedGraph().getEdgePath();
 
 		switch(benchmarkRun.getAlgorithm()) {
 			case BFS:
@@ -161,8 +168,8 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 				throw new PlatformExecutionException("Unsupported algorithm");
 		}
 
-		if (benchmarkRun.isOutputRequired()) {
-			Path outputFile = benchmarkRun.getOutputDir().resolve(benchmarkRun.getName());
+		if (benchmarkRunSetup.isOutputRequired()) {
+			Path outputFile = benchmarkRunSetup.getOutputDir().resolve(benchmarkRun.getName());
 			job.setOutputFile(outputFile.toFile());
 		}
 
@@ -175,16 +182,20 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void startup(BenchmarkRun benchmarkRun) {
-		startPlatformLogging(benchmarkRun.getLogDir().resolve("platform").resolve("driver.logs"));
+	public void startup(RunSpecification runSpecification) {
+		BenchmarkRunSetup benchmarkRunSetup = runSpecification.getBenchmarkRunSetup();
+		startPlatformLogging(benchmarkRunSetup.getLogDir().resolve("platform").resolve("driver.logs"));
 	}
 
 
 	@Override
-	public BenchmarkMetrics finalize(BenchmarkRun benchmarkRun) {
+	public BenchmarkMetrics finalize(RunSpecification runSpecification) {
 		stopPlatformLogging();
+		BenchmarkRunSetup benchmarkRunSetup = runSpecification.getBenchmarkRunSetup();
+		BenchmarkRun benchmarkRun = runSpecification.getBenchmarkRun();
 
-		Path platformLogPath = benchmarkRun.getLogDir().resolve("platform");
+
+		Path platformLogPath = benchmarkRunSetup.getLogDir().resolve("platform");
 
 		final List<Double> superstepTimes = new ArrayList<>();
 
@@ -243,8 +254,8 @@ public class PowergraphPlatform implements GranulaAwarePlatform {
 	}
 
 	@Override
-	public void terminate(BenchmarkRun benchmarkRun) {
-		BenchmarkRunner.terminatePlatform(benchmarkRun);
+	public void terminate(RunSpecification runSpecification) {
+		BenchmarkRunner.terminatePlatform(runSpecification);
 	}
 
 	private static void startPlatformLogging(Path fileName) {
