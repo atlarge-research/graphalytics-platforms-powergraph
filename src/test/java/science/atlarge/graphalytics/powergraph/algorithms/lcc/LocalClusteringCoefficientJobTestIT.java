@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package science.atlarge.graphalytics.powergraph.algorithms.wcc;
+package science.atlarge.graphalytics.powergraph.algorithms.lcc;
 
 import java.io.File;
 
 import science.atlarge.graphalytics.powergraph.Utils;
 import science.atlarge.graphalytics.validation.GraphStructure;
-import science.atlarge.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsOutput;
-import science.atlarge.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsValidationTest;
+import science.atlarge.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientOutput;
+import science.atlarge.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientValidationTest;
 
 /**
- * Validation tests for the connected components implementation in PowerGraph.
+ * Validation tests for the local clustering coefficient calculation implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class WeaklyConnectedComponentsJobTest extends WeaklyConnectedComponentsValidationTest {
+public class LocalClusteringCoefficientJobTestIT extends LocalClusteringCoefficientValidationTest {
 
 	@Override
-	public WeaklyConnectedComponentsOutput executeDirectedConnectedComponents(GraphStructure graph) throws Exception {
+	public LocalClusteringCoefficientOutput executeDirectedLocalClusteringCoefficient(GraphStructure graph)
+			throws Exception {
 		return execute(graph, true);
 	}
 
 	@Override
-	public WeaklyConnectedComponentsOutput executeUndirectedConnectedComponents(GraphStructure graph) throws Exception {
+	public LocalClusteringCoefficientOutput executeUndirectedLocalClusteringCoefficient(GraphStructure graph)
+			throws Exception {
 		return execute(graph, false);
 	}
 	
-	private WeaklyConnectedComponentsOutput execute(GraphStructure graph, boolean directed) throws Exception {
+	private LocalClusteringCoefficientOutput execute(GraphStructure graph, boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
@@ -50,13 +52,14 @@ public class WeaklyConnectedComponentsJobTest extends WeaklyConnectedComponentsV
 		String jobId = "RandomJobId";
 		String logPath = "RandomLogDir";
 
-		ConnectedComponentsJob job = new ConnectedComponentsJob(
+		LocalClusteringCoefficientJob job = new LocalClusteringCoefficientJob(
 				Utils.loadConfiguration(),
 				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
 				directed, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new WeaklyConnectedComponentsOutput(Utils.readResults(outputFile, Long.class));
+		return new LocalClusteringCoefficientOutput(Utils.readResults(outputFile, Double.class));
 	}
+
 }
