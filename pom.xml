@@ -265,6 +265,13 @@
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/BreadthFirstSearchJobTestIT.java</exclude>
+                        <exclude>**/CommunityDetectionLPJobTestIT.java</exclude>
+                        <exclude>**/LocalClusteringCoefficientJobTestIT.java</exclude>
+                        <exclude>**/PageRankJobTestIT.java</exclude>
+                        <exclude>**/WeaklyConnectedComponentsJobTestIT.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
