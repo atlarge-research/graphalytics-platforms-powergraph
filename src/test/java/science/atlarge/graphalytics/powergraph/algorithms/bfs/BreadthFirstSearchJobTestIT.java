@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package science.atlarge.graphalytics.powergraph.algorithms.cdlp;
+package science.atlarge.graphalytics.powergraph.algorithms.bfs;
 
 import java.io.File;
 
-import science.atlarge.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
+import science.atlarge.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import science.atlarge.graphalytics.powergraph.Utils;
 import science.atlarge.graphalytics.validation.GraphStructure;
-import science.atlarge.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPOutput;
-import science.atlarge.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPValidationTest;
+import science.atlarge.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
+import science.atlarge.graphalytics.validation.algorithms.bfs.BreadthFirstSearchValidationTest;
 
 /**
- * Validation tests for the community detection implementation in PowerGraph.
+ * Validation tests for the BFS implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class CommunityDetectionLPJobTest extends CommunityDetectionLPValidationTest {
+public class BreadthFirstSearchJobTestIT extends BreadthFirstSearchValidationTest {
 
 	@Override
-	public CommunityDetectionLPOutput executeDirectedCommunityDetection(GraphStructure graph,
-			CommunityDetectionLPParameters parameters) throws Exception {
+	public BreadthFirstSearchOutput executeDirectedBreadthFirstSearch(GraphStructure graph,
+			BreadthFirstSearchParameters parameters) throws Exception {
 		return execute(graph, parameters, true);
 	}
 
 	@Override
-	public CommunityDetectionLPOutput executeUndirectedCommunityDetection(GraphStructure graph,
-			CommunityDetectionLPParameters parameters) throws Exception {
+	public BreadthFirstSearchOutput executeUndirectedBreadthFirstSearch(GraphStructure graph,
+			BreadthFirstSearchParameters parameters) throws Exception {
 		return execute(graph, parameters, false);
 	}
 	
-	private CommunityDetectionLPOutput execute(GraphStructure graph, CommunityDetectionLPParameters parameters,
-			boolean directed) throws Exception {
+	private BreadthFirstSearchOutput execute(GraphStructure graph,
+			BreadthFirstSearchParameters parameters, boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
@@ -54,13 +54,13 @@ public class CommunityDetectionLPJobTest extends CommunityDetectionLPValidationT
 		String jobId = "RandomJobId";
 		String logPath = "RandomLogDir";
 
-		CommunityDetectionJob job = new CommunityDetectionJob(
+		BreadthFirstSearchJob job = new BreadthFirstSearchJob(
 				Utils.loadConfiguration(),
 				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
 				directed, parameters, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new CommunityDetectionLPOutput(Utils.readResults(outputFile, Long.class));
+		return new BreadthFirstSearchOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

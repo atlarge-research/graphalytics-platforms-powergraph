@@ -13,35 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package science.atlarge.graphalytics.powergraph.algorithms.lcc;
+package science.atlarge.graphalytics.powergraph.algorithms.cdlp;
 
 import java.io.File;
 
+import science.atlarge.graphalytics.domain.algorithms.CommunityDetectionLPParameters;
 import science.atlarge.graphalytics.powergraph.Utils;
 import science.atlarge.graphalytics.validation.GraphStructure;
-import science.atlarge.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientOutput;
-import science.atlarge.graphalytics.validation.algorithms.lcc.LocalClusteringCoefficientValidationTest;
+import science.atlarge.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPOutput;
+import science.atlarge.graphalytics.validation.algorithms.cdlp.CommunityDetectionLPValidationTest;
 
 /**
- * Validation tests for the local clustering coefficient calculation implementation in PowerGraph.
+ * Validation tests for the community detection implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class LocalClusteringCoefficientJobTest extends LocalClusteringCoefficientValidationTest {
+public class CommunityDetectionLPJobTestIT extends CommunityDetectionLPValidationTest {
 
 	@Override
-	public LocalClusteringCoefficientOutput executeDirectedLocalClusteringCoefficient(GraphStructure graph)
-			throws Exception {
-		return execute(graph, true);
+	public CommunityDetectionLPOutput executeDirectedCommunityDetection(GraphStructure graph,
+			CommunityDetectionLPParameters parameters) throws Exception {
+		return execute(graph, parameters, true);
 	}
 
 	@Override
-	public LocalClusteringCoefficientOutput executeUndirectedLocalClusteringCoefficient(GraphStructure graph)
-			throws Exception {
-		return execute(graph, false);
+	public CommunityDetectionLPOutput executeUndirectedCommunityDetection(GraphStructure graph,
+			CommunityDetectionLPParameters parameters) throws Exception {
+		return execute(graph, parameters, false);
 	}
 	
-	private LocalClusteringCoefficientOutput execute(GraphStructure graph, boolean directed) throws Exception {
+	private CommunityDetectionLPOutput execute(GraphStructure graph, CommunityDetectionLPParameters parameters,
+			boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
@@ -52,14 +54,13 @@ public class LocalClusteringCoefficientJobTest extends LocalClusteringCoefficien
 		String jobId = "RandomJobId";
 		String logPath = "RandomLogDir";
 
-		LocalClusteringCoefficientJob job = new LocalClusteringCoefficientJob(
+		CommunityDetectionJob job = new CommunityDetectionJob(
 				Utils.loadConfiguration(),
 				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
-				directed, jobId, logPath);
+				directed, parameters, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new LocalClusteringCoefficientOutput(Utils.readResults(outputFile, Double.class));
+		return new CommunityDetectionLPOutput(Utils.readResults(outputFile, Long.class));
 	}
-
 }
