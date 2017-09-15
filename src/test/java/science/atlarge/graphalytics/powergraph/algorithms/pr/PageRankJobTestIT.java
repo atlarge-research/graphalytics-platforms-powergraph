@@ -28,7 +28,7 @@ import science.atlarge.graphalytics.validation.algorithms.pr.PageRankValidationT
  *
  * @author Stijn Heldens
  */
-public class PageRankJobTest extends PageRankValidationTest {
+public class PageRankJobTestIT extends PageRankValidationTest {
 
 	@Override
 	public PageRankOutput executeDirectedPageRank(GraphStructure graph, PageRankParameters parameters)

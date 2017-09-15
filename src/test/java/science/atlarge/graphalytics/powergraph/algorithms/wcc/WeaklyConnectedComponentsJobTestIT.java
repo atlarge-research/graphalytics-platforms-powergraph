@@ -13,37 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package science.atlarge.graphalytics.powergraph.algorithms.bfs;
+package science.atlarge.graphalytics.powergraph.algorithms.wcc;
 
 import java.io.File;
 
-import science.atlarge.graphalytics.domain.algorithms.BreadthFirstSearchParameters;
 import science.atlarge.graphalytics.powergraph.Utils;
 import science.atlarge.graphalytics.validation.GraphStructure;
-import science.atlarge.graphalytics.validation.algorithms.bfs.BreadthFirstSearchOutput;
-import science.atlarge.graphalytics.validation.algorithms.bfs.BreadthFirstSearchValidationTest;
+import science.atlarge.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsOutput;
+import science.atlarge.graphalytics.validation.algorithms.wcc.WeaklyConnectedComponentsValidationTest;
 
 /**
- * Validation tests for the BFS implementation in PowerGraph.
+ * Validation tests for the connected components implementation in PowerGraph.
  *
  * @author Stijn Heldens
  */
-public class BreadthFirstSearchJobTest extends BreadthFirstSearchValidationTest {
+public class WeaklyConnectedComponentsJobTestIT extends WeaklyConnectedComponentsValidationTest {
 
 	@Override
-	public BreadthFirstSearchOutput executeDirectedBreadthFirstSearch(GraphStructure graph,
-			BreadthFirstSearchParameters parameters) throws Exception {
-		return execute(graph, parameters, true);
+	public WeaklyConnectedComponentsOutput executeDirectedConnectedComponents(GraphStructure graph) throws Exception {
+		return execute(graph, true);
 	}
 
 	@Override
-	public BreadthFirstSearchOutput executeUndirectedBreadthFirstSearch(GraphStructure graph,
-			BreadthFirstSearchParameters parameters) throws Exception {
-		return execute(graph, parameters, false);
+	public WeaklyConnectedComponentsOutput executeUndirectedConnectedComponents(GraphStructure graph) throws Exception {
+		return execute(graph, false);
 	}
 	
-	private BreadthFirstSearchOutput execute(GraphStructure graph,
-			BreadthFirstSearchParameters parameters, boolean directed) throws Exception {
+	private WeaklyConnectedComponentsOutput execute(GraphStructure graph, boolean directed) throws Exception {
 		File edgesFile = File.createTempFile("edges.", ".txt");
 		File verticesFile = File.createTempFile("vertices.", ".txt");
 		File outputFile = File.createTempFile("output.", ".txt");
@@ -54,13 +50,13 @@ public class BreadthFirstSearchJobTest extends BreadthFirstSearchValidationTest 
 		String jobId = "RandomJobId";
 		String logPath = "RandomLogDir";
 
-		BreadthFirstSearchJob job = new BreadthFirstSearchJob(
+		ConnectedComponentsJob job = new ConnectedComponentsJob(
 				Utils.loadConfiguration(),
 				verticesFile.getAbsolutePath(), edgesFile.getAbsolutePath(),
-				directed, parameters, jobId, logPath);
+				directed, jobId, logPath);
 		job.setOutputFile(outputFile);
 		job.run();
 		
-		return new BreadthFirstSearchOutput(Utils.readResults(outputFile, Long.class));
+		return new WeaklyConnectedComponentsOutput(Utils.readResults(outputFile, Long.class));
 	}
 }

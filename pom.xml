@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <platform.name>powergraph</platform.name>
-        <graphalytics.version>0.9.0-SNAPSHOT</graphalytics.version>
+        <graphalytics.version>0.9.0</graphalytics.version>
         <log4j.version>2.5</log4j.version>
         <fastutil.version>7.0.10</fastutil.version>
     </properties>
@@ -249,6 +249,39 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pushChanges>false</pushChanges>
                 </configuration>
+            </plugin>
+
+            <plugin><!-- Unit tests management -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
+
+            <plugin><!-- Integration tests management -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.13</version>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/BreadthFirstSearchJobTestIT.java</exclude>
+                        <exclude>**/CommunityDetectionLPJobTestIT.java</exclude>
+                        <exclude>**/LocalClusteringCoefficientJobTestIT.java</exclude>
+                        <exclude>**/PageRankJobTestIT.java</exclude>
+                        <exclude>**/WeaklyConnectedComponentsJobTestIT.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>failsafe-integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
