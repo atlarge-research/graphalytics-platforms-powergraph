@@ -18,9 +18,15 @@
 # Adapt this build script to your cluster environment.
 
 # Download Powergraph v2.2 #a038f97
-wget https://github.com/dato-code/PowerGraph
+git clone https://github.com/jegonzal/PowerGraph
 
-# Change boost src to http://kent.dl.sourceforge.net/project/boost/boost/1.53.0/boost_1_53_0.tar.gz in CMakeList.
+# Move into the powergraph repo directory.
+cd PowerGraph
+
+# Patch the Powergraph CMakeLists.txt to change dependency lines containing broken URIs.
+# Replace the hash in the patch name with any newer version for which a patch file exists,
+# or when this is fixed, comment out the patch entirely.
+patch CMakeLists.txt < ../$(dirname "$0")/../utils/CMakeLists_a038f97.diff
 
 # Adapt compilation setup
 rm -rf deps/*
