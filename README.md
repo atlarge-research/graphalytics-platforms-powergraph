@@ -1,4 +1,4 @@
-# Graphalytics PowerGraph platform extension
+# Graphalytics PowerGraph platform driver
 
 [![Build Status](https://jenkins.tribler.org/buildStatus/icon?job=Graphalytics/Platforms/PowerGraph_master)](https://jenkins.tribler.org/job/Graphalytics/job/Platforms/job/PowerGraph_master/)
 
