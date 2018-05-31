@@ -34,7 +34,7 @@ Edit `config/powergraph.properties` to change the following settings:
 
  - `platform.powergraph.home`: Set to the root directory where PowerGraph has been installed.
  - `platform.powergraph.num-threads`: Set the number of threads PowerGraph should use.
- - `platform.powergraph.nodes`: Set the the names of computation nodes, with format e.g., "10.149.0.55\\,10.149.0.56" (note: IP's separated between 
+ - `platform.powergraph.nodes`: Set the the names of computation nodes, with format e.g., `10.149.0.55\,10.149.0.56` (note: IP's separated between 
  `\,` non-separated by spaces).
 
 
