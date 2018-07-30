@@ -44,7 +44,7 @@
         <dependency>
             <groupId>science.atlarge.graphalytics</groupId>
             <artifactId>graphalytics-plugins-granula</artifactId>
-            <version>${graphalytics.version}</version>
+            <version>0.9.0</version>
         </dependency>
 
         <dependency>
@@ -319,7 +319,7 @@
             </releases>
             <id>graphalytics</id>
             <name>Graphalytics</name>
-            <url>http://graphalytics.site/maven</url>
+            <url>https://atlarge.ewi.tudelft.nl/graphalytics/mvn</url>
             <layout>default</layout>
         </repository>
     </repositories>
